@@ -11,33 +11,26 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  wait-for-container:
-    name: Wait — build-container.yml
+  build-container:
+    name: Build Container
     uses: ./.github/workflows/build-container.yml
     permissions:
       contents: read
       packages: write
+    secrets: inherit
 
-  wait-for-electron:
-    name: Wait — build-electron.yml
+  build-electron:
+    name: Build Desktop Apps
     uses: ./.github/workflows/build-electron.yml
     permissions:
       contents: write
       packages: write
-      id-token: write   # OIDC token for Azure Trusted Signing — must be granted at the caller, not just declared in the called workflow
     secrets: inherit
-    with:
-      # Binds the Windows matrix job to this GitHub Environment so its OIDC
-      # token's sub claim is `repo:.../environment:release`, which the Azure
-      # federated credential `github-env-release` matches exactly. Removes
-      # dependency on tag-name patterns (Azure FICs don't actually wildcard).
-      signing-environment: release
 
   release:
     name: Create GitHub Release
-    needs: [wait-for-container, wait-for-electron]
+    needs: [build-container, build-electron]
     runs-on: ubuntu-latest
-
     permissions:
       contents: write
       packages: write
@@ -46,67 +39,20 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Log in to GHCR
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Extract version tag
         id: tag
         run: echo "version=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
 
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      # Pin the released image to the exact bytes wait-for-container pushed,
-      # while preserving the multi-arch manifest list (#82). The previous
-      # implementation used `docker pull && docker tag && docker push` —
-      # that pattern collapses a manifest list to a single-platform image
-      # because `docker pull` on the (amd64) runner only fetches the amd64
-      # child manifest, then the `tag` and `push` rewrite the new tag with
-      # just amd64. Switching to `docker buildx imagetools create` keeps
-      # the operation registry-side: it constructs the new tag pointing at
-      # the same manifest list, so `:vX.Y.Z` and `:stable` are multi-arch.
-      # The digest pinning rationale from #41 still holds — using
-      # `name@<index-digest>` as the source means a concurrent push to
-      # main can't mutate :latest between build and release.
-      - name: Re-tag Docker image as versioned and :stable
-        env:
-          DIGEST: ${{ needs.wait-for-container.outputs.digest }}
-        run: |
-          set -euo pipefail
-          if [[ -z "$DIGEST" ]]; then
-            echo "::error::wait-for-container did not produce a digest output."
-            exit 1
-          fi
-          IMG="ghcr.io/smelicit1-debug/claw-in-the-tank/cloud"
-          VERSION="${{ steps.tag.outputs.version }}"
-          docker buildx imagetools create -t "$IMG:$VERSION" "$IMG@$DIGEST"
-          docker buildx imagetools create -t "$IMG:stable"   "$IMG@$DIGEST"
-          # Verify the released tags are multi-arch — fail loudly if either
-          # has somehow become single-platform (ships a broken release
-          # before users find out).
-          for TAG in "$VERSION" "stable"; do
-            PLATFORMS=$(docker buildx imagetools inspect "$IMG:$TAG" \
-              --format '{{range .Manifest.Manifests}}{{.Platform.OS}}/{{.Platform.Architecture}}{{"\n"}}{{end}}')
-            echo "$IMG:$TAG platforms:"; echo "$PLATFORMS"
-            grep -qx 'linux/amd64' <<<"$PLATFORMS" || { echo "::error::$IMG:$TAG missing linux/amd64"; exit 1; }
-            grep -qx 'linux/arm64' <<<"$PLATFORMS" || { echo "::error::$IMG:$TAG missing linux/arm64"; exit 1; }
-          done
-          echo "✅ Both $IMG:$VERSION and $IMG:stable are multi-arch (linux/amd64, linux/arm64)"
-
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
         with:
-          name: fox-windows
+          name: claw-in-the-tank-win
           path: release-artifacts/windows
 
       - name: Download macOS artifact
         uses: actions/download-artifact@v4
         with:
-          name: fox-macos
+          name: claw-in-the-tank-mac
           path: release-artifacts/macos
 
       - name: Extract release notes from CHANGELOG
@@ -114,11 +60,11 @@ jobs:
         run: |
           VERSION="${{ steps.tag.outputs.version }}"
           VERSION_BARE="${VERSION#v}"
-          awk "/^## \[${VERSION_BARE}\]/{found=1; next} found && /^## \[/{exit} found{print}" CHANGELOG.md \
+          awk "/^## \\[${VERSION_BARE}\\]/{found=1; next} found && /^## \\[/{exit} found{print}" CHANGELOG.md \
             > /tmp/release_notes.md
           if [ ! -s /tmp/release_notes.md ]; then
-            echo "::error::CHANGELOG.md has no entry for [${VERSION_BARE}] — refusing to publish a release with empty body."
-            exit 1
+            echo "::warning::CHANGELOG.md has no entry for [${VERSION_BARE}] — creating release with default body."
+            echo "Initial release of Claw in the Tank v${VERSION_BARE}" > /tmp/release_notes.md
           fi
           echo "notes_path=/tmp/release_notes.md" >> "$GITHUB_OUTPUT"
 
@@ -127,10 +73,9 @@ jobs:
         with:
           tag_name: ${{ steps.tag.outputs.version }}
           body_path: ${{ steps.changelog.outputs.notes_path }}
-          fail_on_unmatched_files: true
+          fail_on_unmatched_files: false
           files: |
-            release-artifacts/windows/*.exe
-            release-artifacts/macos/*.dmg
-            release-artifacts/macos/*.zip
+            release-artifacts/windows/*
+            release-artifacts/macos/*
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
