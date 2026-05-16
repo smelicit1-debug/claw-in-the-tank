@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" fill="none">
+  <!-- Tank body -->
+  <rect x="35" y="100" width="130" height="55" rx="10" ry="10" fill="#1a1a1a" stroke="#ff3333" stroke-width="3"/>
+  <rect x="45" y="108" width="110" height="38" rx="6" ry="6" fill="#0d0d0d" stroke="#ff3333" stroke-width="1.5" opacity="0.5"/>
+  <!-- Tank treads -->
+  <rect x="30" y="100" width="20" height="55" rx="5" ry="5" fill="#ff3333" opacity="0.8"/>
+  <rect x="150" y="100" width="20" height="55" rx="5" ry="5" fill="#ff3333" opacity="0.8"/>
+  <!-- Tank barrel -->
+  <rect x="85" y="55" width="30" height="48" rx="4" ry="4" fill="#1a1a1a" stroke="#ff3333" stroke-width="2.5"/>
+  <!-- Turret -->
+  <ellipse cx="100" cy="78" rx="28" ry="18" fill="#1a1a1a" stroke="#ff3333" stroke-width="2.5"/>
+  <!-- Lobster claw on top -->
+  <g transform="translate(95, 20) scale(0.9)">
+    <!-- Claw arm -->
+    <path d="M5,30 Q0,15 10,5" stroke="#ff3333" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <path d="M5,30 Q18,18 14,5" stroke="#ff3333" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+    <!-- Pincer top -->
+    <path d="M4,8 Q-2,-2 5,-8 Q10,-10 14,5" fill="#ff3333" stroke="#cc0000" stroke-width="1.5"/>
+    <!-- Pincer bottom -->
+    <path d="M14,5 Q18,-2 12,-8 Q8,-10 4,8" fill="#ff3333" stroke="#cc0000" stroke-width="1.5"/>
+    <!-- Claw dots -->
+    <circle cx="7" cy="-2" r="1.5" fill="#cc0000"/>
+    <circle cx="12" cy="-3" r="1.5" fill="#cc0000"/>
+    <circle cx="9" cy="2" r="1.5" fill="#cc0000"/>
+  </g>
+  <!-- Water in the tank -->
+  <rect x="50" y="118" width="100" height="24" rx="4" ry="4" fill="#1a8aff" opacity="0.15"/>
+  <!-- Small bubble -->
+  <circle cx="85" cy="126" r="3" fill="#1a8aff" opacity="0.2"/>
+  <circle cx="95" cy="130" r="2" fill="#1a8aff" opacity="0.2"/>
+  <circle cx="110" cy="128" r="2.5" fill="#1a8aff" opacity="0.2"/>
+  <!-- Eye on turret -->
+  <circle cx="100" cy="75" r="7" fill="#0d0d0d" stroke="#ff3333" stroke-width="1.5"/>
+  <circle cx="100" cy="75" r="3.5" fill="#ff3333"/>
+  <circle cx="101" cy="73" r="1.5" fill="#1a1a1a"/>
+</svg>
