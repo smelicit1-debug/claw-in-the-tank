@@ -216,10 +216,10 @@ All checklists fillable, results tracked in `LIGHTSAIL_TEST_CHECKLIST.md`
 ```bash
 mkdir -p /patches && chmod 777 /patches
 ssh-keygen -t ed25519 -f ~/.ssh/vps-patch-sync -N ""
-# Share public key with FITB for rsync
+# Share public key with CITB for rsync
 ```
 
-### On FITB
+### On CITB
 ```bash
 cat ~/.ssh/vps-patch-sync >> ~/.ssh/authorized_keys
 chmod +x ~/.hermes/scripts/vps-patch-sync.sh
@@ -249,7 +249,7 @@ chmod +x ~/.hermes/scripts/vps-patch-sync.sh
 ```
 d088ae7 — docs: workflow complete — biweekly release cycle reference guide
 9e2790c — merge: task 11 — version sync + dev mode + release workflow
-0230c5b — workflow: biweekly release cycle with VPS → FITB patch sync + Lightsail testing
+0230c5b — workflow: biweekly release cycle with VPS → CITB patch sync + Lightsail testing
 9395dd3 — test (placeholder for version + dev-mode commits)
 c65b286 — docs: task 10 — CLI graceful shutdown (P0) tracking upstream feature branches
 ```
@@ -291,7 +291,7 @@ git tag v0.2.0 && git push origin v0.2.0
 # See: LIGHTSAIL_TEST_CHECKLIST.md
 
 # Cleanup
-aws lightsail delete-instances --instance-names fitb-test-*
+aws lightsail delete-instances --instance-names citb-test-*
 ```
 
 ---
@@ -316,7 +316,7 @@ All processes fully documented:
 
 **You now have:**
 ✅ Automated dev iteration (seconds cycle)  
-✅ Clean release pipeline (VPS → FITB → Lightsail → GitHub)  
+✅ Clean release pipeline (VPS → CITB → Lightsail → GitHub)  
 ✅ Tested on all 3 platforms before deploy  
 ✅ Zero-cost testing (AWS free tier)  
 ✅ ~4 hours hands-on per 2-week cycle

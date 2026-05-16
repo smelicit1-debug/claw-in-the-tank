@@ -1,13 +1,13 @@
-# Fox in the Box — Smoke Test Checklist
+# Claw in the Box — Smoke Test Checklist
 
 **When to run:** Before tagging any minor version bump (v0.5.0, v0.6.0, …) and after any change to onboarding, providers, Tailscale, local fallback, or the Docker image. Per roadmap Rule 5: stabilization pass before every minor release.
 
 **How long it takes:** ~30 minutes if everything passes. Plan ~2 hours if something fails (fix → rebuild → re-run from the failed step).
 
 **Setup:**
-1. Build the candidate image: `docker build -f packages/integration/Dockerfile -t fitb:smoke .`
-2. Reset state: `docker rm -f fitb-smoke 2>/dev/null; docker volume rm fitb-smoke-data 2>/dev/null; docker volume create fitb-smoke-data`
-3. Start: `docker run -d --name fitb-smoke --cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1 -p 127.0.0.1:8788:8787 -v fitb-smoke-data:/data fitb:smoke`
+1. Build the candidate image: `docker build -f packages/integration/Dockerfile -t citb:smoke .`
+2. Reset state: `docker rm -f citb-smoke 2>/dev/null; docker volume rm citb-smoke-data 2>/dev/null; docker volume create citb-smoke-data`
+3. Start: `docker run -d --name citb-smoke --cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1 -p 127.0.0.1:8788:8787 -v citb-smoke-data:/data citb:smoke`
 4. Wait: `until curl -fsS http://127.0.0.1:8788/health >/dev/null; do sleep 2; done`
 5. Wait 15 seconds more for entrypoint to finish (operator grant, etc.)
 
@@ -19,8 +19,8 @@
 
 - [ ] **A1.** `/health` returns 200 with `{"status":"ok"}`
 - [ ] **A2.** Container logs show `[entrypoint] Granted foxinthebox tailscale operator access.` within ~15s of startup
-- [ ] **A3.** `docker exec fitb-smoke supervisorctl -c /etc/supervisor/supervisord.conf status` — all programs RUNNING except `llama-server` (which should be STOPPED unless local fallback is enabled)
-- [ ] **A4.** Architecture check on Apple Silicon: `docker exec fitb-smoke ls /app/llama-cpp/ | grep libggml-cpu | head -3` — output should contain `armv8` or `armv9` flavors (NOT `alderlake`/`cannonlake`/etc which would be x86_64 — that's #114)
+- [ ] **A3.** `docker exec citb-smoke supervisorctl -c /etc/supervisor/supervisord.conf status` — all programs RUNNING except `llama-server` (which should be STOPPED unless local fallback is enabled)
+- [ ] **A4.** Architecture check on Apple Silicon: `docker exec citb-smoke ls /app/llama-cpp/ | grep libggml-cpu | head -3` — output should contain `armv8` or `armv9` flavors (NOT `alderlake`/`cannonlake`/etc which would be x86_64 — that's #114)
 
 ---
 
@@ -43,8 +43,8 @@ Open `http://127.0.0.1:8788` in a fresh browser tab (or incognito).
 ## Section C — Settings persistence across restart (3 min)
 
 - [ ] **C1.** Settings → toggle theme to `light`, change a few other things
-- [ ] **C2.** Verify `docker exec fitb-smoke ls /data/state/webui/settings.json` exists, foxinthebox-owned (NOT in `/app/.hermes/webui/`)
-- [ ] **C3.** `docker restart fitb-smoke`, wait for /health
+- [ ] **C2.** Verify `docker exec citb-smoke ls /data/state/webui/settings.json` exists, foxinthebox-owned (NOT in `/app/.hermes/webui/`)
+- [ ] **C3.** `docker restart citb-smoke`, wait for /health
 - [ ] **C4.** Reload browser → all your changes survived
 - [ ] **C5.** Same test for hostname-prompted flag and tailscale_* power-user fields
 
@@ -56,7 +56,7 @@ Open `http://127.0.0.1:8788` in a fresh browser tab (or incognito).
 - [ ] **D2.** Send a chat → real response from configured model
 - [ ] **D3.** Pick a different model from the model picker → conversation continues
 - [ ] **D4.** Settings → Providers → if Ollama detected, click "Use this model" on a local Ollama model
-- [ ] **D5.** Verify config landed in the gateway's path: `docker exec fitb-smoke cat /data/data/hermes/config.yaml | head -10` shows `provider: custom` and the Ollama base URL (NOT in `/app/.hermes/config.yaml`)
+- [ ] **D5.** Verify config landed in the gateway's path: `docker exec citb-smoke cat /data/data/hermes/config.yaml | head -10` shows `provider: custom` and the Ollama base URL (NOT in `/app/.hermes/config.yaml`)
 - [ ] **D6.** Send a chat → response routes through Ollama (check Ollama's logs on host)
 - [ ] **D7.** Switch back to OpenRouter → next chat routes through OR
 
@@ -74,7 +74,7 @@ Requires a real Tailscale account.
 - [ ] **E6.** Settings → Network → expand Advanced → set advertise_routes (e.g. `10.0.0.0/24`), accept_dns to false → Save → confirm "Apply now?" prompt → click Yes → reconnects
 - [ ] **E7.** Verify in [Tailscale admin console](https://login.tailscale.com/admin/machines): your machine shows the new routes/tags applied
 - [ ] **E8.** Click Disconnect → confirms → badge flips to Disconnected, Tailscale admin console shows machine offline
-- [ ] **E9.** No orphan `tailscale up` processes: `docker exec fitb-smoke ps aux 2>/dev/null | grep "tailscale up" | grep -v grep` returns nothing
+- [ ] **E9.** No orphan `tailscale up` processes: `docker exec citb-smoke ps aux 2>/dev/null | grep "tailscale up" | grep -v grep` returns nothing
 - [ ] **E10.** Re-Connect → fresh auth URL, full flow works again
 
 ---
@@ -87,7 +87,7 @@ Requires a real Tailscale account.
 - [ ] **F4.** Once at 100%: `sha256_verified: true` in `/api/local-fallback/status` JSON
 - [ ] **F5.** Status transitions Downloading → Starting → Warming → **Ready**
 - [ ] **F6.** `endpoint: http://127.0.0.1:8643/v1` populated, `server_healthy: true`
-- [ ] **F7.** Direct chat works: `docker exec fitb-smoke curl -s -X POST http://127.0.0.1:8643/v1/chat/completions -H 'Content-Type: application/json' -d '{"model":"phi4-mini","messages":[{"role":"user","content":"Reply PONG"}],"max_tokens":5,"stream":false}'` returns a real completion
+- [ ] **F7.** Direct chat works: `docker exec citb-smoke curl -s -X POST http://127.0.0.1:8643/v1/chat/completions -H 'Content-Type: application/json' -d '{"model":"phi4-mini","messages":[{"role":"user","content":"Reply PONG"}],"max_tokens":5,"stream":false}'` returns a real completion
 - [ ] **F8.** Toggle OFF → llama-server stops within ~5s (frees RAM); model file stays on `/data/models/`
 - [ ] **F9.** Toggle ON again → goes straight to Ready in seconds (model already on disk, no re-download)
 
@@ -168,7 +168,7 @@ These checklists were testing gates from previous phases. Re-run before any mino
 |---|---|
 | #105 Phase 0 (v0.5.0) | All A–K above |
 | #122 v0.5.1 stabilization | (a) `/api/ollama/status` and `/api/local-fallback/status` return **200** (not 302) when onboarding incomplete · (b) "Use [model]" on Step 1 advances to Step 2 (NOT chat) and `onboarding.json` stays `completed: false` until Step 3's "Open Fox" · (c) Step 2 shows "Add OpenRouter (optional)" + "Continue with local only" button when state.localModel set · (d) `/api/tailscale/status` response includes `serve_state` + `serve_error` fields · (e) "Configure HTTPS" retry button visible in Settings → Tailscale tile after Connect · (f) Reactive modal fires on `auth_mismatch` and `quota_exhausted` (set OpenRouter key to garbage with fallback OFF, send chat) · (g) Recovery banner appears within 30s when fallback is enabled mid-session and provider is restored · (h) `:stable` digest equals `:vX.Y.Z` digest after release tag (no drift from main pushes) · (i) `/app/version.txt` populated with `dev-<sha>` or `vX.Y.Z` (never empty) |
-| #127 / #128 / #129 v0.5.2 stabilization | **#127:** (a) `ts-operator-watchdog` RUNNING in supervisord status · (b) Force-clear OperatorUser → restored within 35s · (c) `tailscale up` after force-logout produces auth URL (not `Access denied: checkprefs`). **#128:** (d) `localStorage.setItem('fitb.timeout_modal_ms','5000')` → bad provider key → modal in 5s · (e) "Switch now" with fallback OFF → 400 + reason=disabled with actionable copy · (f) With fallback READY → click Switch now → success + dismiss in ~2.5s · (g) Real SSE arrival post-modal → auto-dismisses. **#129:** (h) Bad cloud key + fallback ready → response includes `*Switched to phi4-mini — re-send your message…*` system note (NO red error) · (i) Fallback enabled but model NOT installed → confirm modal "Download local model to keep working?" with size hint · (j) Click Download → progress poll updates inline · (k) On ready → activate → "Ready. Re-send your message…" · (l) Already-local guard: with active = phi4, force a local-side failure → original error surfaces (no redundant `provider_switched`) · (m) Mid-stream truncate: partial tokens then fail → partial cleared, system note appended · (n) `/api/local-fallback/status` includes top-level `ready` field · (o) `/api/local-fallback/activate` registered (200 when ready, 400 + granular `reason` when not) |
+| #127 / #128 / #129 v0.5.2 stabilization | **#127:** (a) `ts-operator-watchdog` RUNNING in supervisord status · (b) Force-clear OperatorUser → restored within 35s · (c) `tailscale up` after force-logout produces auth URL (not `Access denied: checkprefs`). **#128:** (d) `localStorage.setItem('citb.timeout_modal_ms','5000')` → bad provider key → modal in 5s · (e) "Switch now" with fallback OFF → 400 + reason=disabled with actionable copy · (f) With fallback READY → click Switch now → success + dismiss in ~2.5s · (g) Real SSE arrival post-modal → auto-dismisses. **#129:** (h) Bad cloud key + fallback ready → response includes `*Switched to phi4-mini — re-send your message…*` system note (NO red error) · (i) Fallback enabled but model NOT installed → confirm modal "Download local model to keep working?" with size hint · (j) Click Download → progress poll updates inline · (k) On ready → activate → "Ready. Re-send your message…" · (l) Already-local guard: with active = phi4, force a local-side failure → original error surfaces (no redundant `provider_switched`) · (m) Mid-stream truncate: partial tokens then fail → partial cleared, system note appended · (n) `/api/local-fallback/status` includes top-level `ready` field · (o) `/api/local-fallback/activate` registered (200 when ready, 400 + granular `reason` when not) |
 | #109 v0.5.3 (custom Ollama URL) | (a) Settings → Providers → Ollama tile has a "Custom Ollama URL" input · (b) Save with `http://192.168.1.50:11434` → probe uses the new URL · (c) Wizard's Ollama detection respects the custom URL · (d) Empty value falls back to host.docker.internal default. **#110** (Tailscale Serve retry button) was already shipped in v0.5.1 hermes-webui#9 — confirm working and close. |
 | #138 / #139 / #140 v0.5.4 stabilization | **#138:** (a) Settings → Ollama tile → click "Use this model" → chat picker reflects the new model on next open (no 5-min wait, no reload required) · (b) `_available_models_cache` evicts on real config change (mtime-gated, not first load). **#139:** (c) Open Settings → Tailscale tile in **Safari** → click Connect → fallback link `Click to authenticate Tailscale` is visible in the tile · (d) Click the link → auth completes, status flips to Connected, link disappears · (e) Re-Connect after disconnect → fresh link appears, no leftover from prior attempt. **#140:** (f) Authenticate Tailscale via desktop app or `docker exec ... tailscale up` (bypassing the webui Connect button) → within ~15 seconds of opening Settings, `tailscale serve status` shows :8787 mapped without manual "Configure HTTPS" click · (g) HTTPS-toggle hint visible in the Tailscale tile pointing to admin/dns. |
 | #4 + #5 Phase 1 (v0.5.5) | Plugin loads cleanly · PII masking detects SSN/CC/phone/email · <30 ms p95 latency · toggle off = no impact |
@@ -197,9 +197,9 @@ These checklists were testing gates from previous phases. Re-run before any mino
 **Last updated:** v0.5.4 — stabilization for #138 model picker, #139 Safari popup, #140 Serve auto-config. Verification methodology rule unchanged: run against released `:stable` (or candidate `:latest` for pre-tag), not against a local `docker build` from source. The DMG-equivalent install command is the canonical path:
 
 ```bash
-docker run -d --name fox-in-the-box \
+docker run -d --name claw-in-the-box \
   --cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1 \
   -p 127.0.0.1:8787:8787 \
-  -v "$HOME/Library/Application Support/Fox in the Box:/data" \
-  ghcr.io/fox-in-the-box-ai/cloud:stable
+  -v "$HOME/Library/Application Support/Claw in the Box:/data" \
+  ghcr.io/claw-in-the-box-ai/cloud:stable
 ```

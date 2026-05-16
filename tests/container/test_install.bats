@@ -254,7 +254,7 @@ EOF
 
   run env FOX_ACCESS_MODE=1 bash "$TEST_DIR/install.sh"
   [ "$status" -eq 0 ]
-  [[ "$output" == *"Docker is ready"* ]] || [[ "$output" == *"Fox in the Box is installed"* ]]
+  [[ "$output" == *"Docker is ready"* ]] || [[ "$output" == *"Claw in the Box is installed"* ]]
   [[ "$output" == *"sudo only"* ]] || [[ "$output" == *"usermod -aG docker"* ]]
 }
 

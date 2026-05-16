@@ -9,7 +9,7 @@
 
 ## Problem Statement
 
-Messages queued in Fox in the Box WebUI are properly queued and drained by the system, but **user responses are not visible** after queue processing completes. The queue mechanism works (messages get dequeued), but the UI fails to display the assistant's responses, making it appear like messages are "lost in queue."
+Messages queued in Claw in the Box WebUI are properly queued and drained by the system, but **user responses are not visible** after queue processing completes. The queue mechanism works (messages get dequeued), but the UI fails to display the assistant's responses, making it appear like messages are "lost in queue."
 
 **Root Cause:** When a queued message is drained and sent via `setBusy(false)` → `send()`, the response handling may not be properly updating the visible chat history.
 

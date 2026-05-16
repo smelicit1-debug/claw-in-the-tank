@@ -22,20 +22,20 @@ function setRunning(state) {
 }
 
 function buildMenu() {
-  const statusLabel = isRunning ? '🟢 Fox is running' : '🔴 Fox is stopped';
+  const statusLabel = isRunning ? '🟢 Claw is running' : '🔴 Claw is stopped';
 
   const menu = Menu.buildFromTemplate([
     { label: statusLabel, enabled: false },
     { type: 'separator' },
     {
-      label: 'Open Fox',
+      label: 'Open Claw',
       click: () => {
         if (openApp) openApp();
         else shell.openExternal(APP_HOME_URL);
       },
     },
     {
-      label: 'Restart Fox',
+      label: 'Restart Claw',
       click: async () => {
         try {
           await docker.restartContainer();
@@ -46,7 +46,7 @@ function buildMenu() {
       },
     },
     {
-      label: isRunning ? 'Stop Fox' : 'Start Fox',
+      label: isRunning ? 'Stop Claw' : 'Start Claw',
       click: async () => {
         try {
           if (isRunning) {
@@ -96,7 +96,7 @@ function createTray(running, options = {}) {
   startFlow = options.startFlow || null;
   openApp = options.openApp || null;
 
-  tray.setToolTip('Fox in the box');
+  tray.setToolTip('Claw in the Box');
   buildMenu();
 
   log.info('Tray created');

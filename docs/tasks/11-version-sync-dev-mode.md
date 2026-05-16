@@ -48,14 +48,14 @@ $(cat VERSION)
 **Production build:**
 ```bash
 pnpm build:docker
-# → docker build ... -t fox-in-the-box:$(cat VERSION)
+# → docker build ... -t claw-in-the-box:$(cat VERSION)
 # → Clones hermes-agent/webui from git tags at build time
 ```
 
 **Dev build:**
 ```bash
 pnpm build:docker:dev
-# → docker build ... --build-arg FITB_DEV=1 -t fox-in-the-box:dev
+# → docker build ... --build-arg FITB_DEV=1 -t claw-in-the-box:dev
 # → Skips git clone, expects bind mounts at runtime
 ```
 
@@ -76,7 +76,7 @@ docker run -it --rm \
   -p 127.0.0.1:8787:8787 \
   -v $(pwd)/forks/hermes-agent:/root/.hermes/hermes-agent \
   -v $(pwd)/forks/hermes-webui:/root/.hermes/hermes-webui \
-  fox-in-the-box:dev
+  claw-in-the-box:dev
 ```
 
 **Iterate:**
@@ -136,9 +136,9 @@ Exits with error if mounts missing (clear UX).
 ```json
 {
   "scripts": {
-    "build:docker": "docker build -f packages/integration/Dockerfile -t fox-in-the-box:$(cat VERSION) .",
-    "build:docker:dev": "docker build ... --build-arg FITB_DEV=1 -t fox-in-the-box:dev .",
-    "dev:container": "docker run -it ... -v $(pwd)/forks/hermes-agent:... -v $(pwd)/forks/hermes-webui:... fox-in-the-box:dev"
+    "build:docker": "docker build -f packages/integration/Dockerfile -t claw-in-the-box:$(cat VERSION) .",
+    "build:docker:dev": "docker build ... --build-arg FITB_DEV=1 -t claw-in-the-box:dev .",
+    "dev:container": "docker run -it ... -v $(pwd)/forks/hermes-agent:... -v $(pwd)/forks/hermes-webui:... claw-in-the-box:dev"
   }
 }
 ```
@@ -162,7 +162,7 @@ Exits with error if mounts missing (clear UX).
 ### Prod mode (unchanged behavior)
 ```bash
 pnpm build:docker
-docker run -p 127.0.0.1:8787:8787 fox-in-the-box:0.1.0
+docker run -p 127.0.0.1:8787:8787 claw-in-the-box:0.1.0
 # Should clone hermes-agent and hermes-webui on first run
 ```
 

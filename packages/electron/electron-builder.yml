@@ -1,5 +1,5 @@
-appId: io.foxinthebox.desktop
-productName: Fox in the Box
+appId: com.openclawtank.claw.desktop
+productName: Claw in the Box
 executableName: FoxInTheBox
 copyright: "Copyright © 2024 Vulpy, Inc."
 
@@ -22,7 +22,7 @@ win:
     - target: nsis
       arch:
         - x64
-  artifactName: "fox-in-the-box-setup-${arch}.exe"
+  artifactName: "claw-in-the-box-setup-${arch}.exe"
   signAndEditExecutable: false
 
 nsis:
@@ -30,8 +30,8 @@ nsis:
   perMachine: false
   allowToChangeInstallationDirectory: false
   deleteAppDataOnUninstall: false
-  uninstallDisplayName: Fox in the Box
-  shortcutName: Fox in the Box
+  uninstallDisplayName: Claw in the Box
+  shortcutName: Claw in the Box
   installerIcon: assets/icon.ico
   uninstallerIcon: assets/icon.ico
   include: build/installer.nsh
@@ -47,7 +47,7 @@ mac:
       arch:
         - x64
         - arm64
-  artifactName: "fox-in-the-box-${arch}-mac.${ext}"
+  artifactName: "claw-in-the-box-${arch}-mac.${ext}"
   hardenedRuntime: true
   gatekeeperAssess: false
   entitlements: build/entitlements.mac.plist
@@ -57,12 +57,12 @@ mac:
 
 linux:
   category: Utility
-  executableName: fox-in-the-box
+  executableName: claw-in-the-box
   target:
     - dir
 
 publish:
   provider: github
-  owner: fox-in-the-box-ai
-  repo: fox-in-the-box
+  owner: claw-in-the-box-ai
+  repo: claw-in-the-box
   releaseType: release

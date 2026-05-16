@@ -1,4 +1,4 @@
-# Fox in the Box — Developer-First Marketing Strategy
+# Claw in the Box — Developer-First Marketing Strategy
 **Version**: 0.2 (Developer focus) | **Updated**: May 1, 2026  
 **Based on**: Real developer research (10,000+ devs, 64K+ GitHub issues, peer-reviewed studies)
 

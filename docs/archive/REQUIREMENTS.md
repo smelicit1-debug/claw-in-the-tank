@@ -1,4 +1,4 @@
-# Fox in the Box — Requirements & Architecture Document
+# Claw in the Box — Requirements & Architecture Document
 
 **Version:** 0.2.0 (Draft)
 **Date:** April 28, 2026
@@ -8,20 +8,20 @@
 
 ## 1. Project Overview
 
-### 1.1 What Is Fox in the Box?
+### 1.1 What Is Claw in the Box?
 
-Fox in the Box is an all-in-one, self-hosted AI assistant platform packaged as a single Docker container with native desktop apps (Electron) for Windows and macOS. It bundles a curated, tested, and stable set of open-source AI tools into a "works out of the box" experience for non-technical users.
+Claw in the Box is an all-in-one, self-hosted AI assistant platform packaged as a single Docker container with native desktop apps (Electron) for Windows and macOS. It bundles a curated, tested, and stable set of open-source AI tools into a "works out of the box" experience for non-technical users.
 
 ### 1.2 Brand Guidelines
 
 - **Product name (logos, UI):** lowercase "fox in the box"
-- **Marketing copy:** sentence case "Fox in the box"
+- **Marketing copy:** sentence case "Claw in the Box"
 - **Parent brand:** fox in the box (fox in the box)
 - **Domain:** `foxinthebox.io`
 - **Tagline concept:** "AI Fox who simply works. For everyone."
 - **Visual identity:** Fox character, container/box metaphor
-- **GitHub Org:** `fox-in-the-box-ai`
-- **Container image:** `ghcr.io/fox-in-the-box-ai/cloud:stable`
+- **GitHub Org:** `claw-in-the-box-ai`
+- **Container image:** `ghcr.io/claw-in-the-box-ai/cloud:stable`
 
 ### 1.3 Core Philosophy
 
@@ -123,8 +123,8 @@ Result: `https://[machine-name].tailnet.ts.net` → WebUI with valid HTTPS certi
 ```
 ~/.foxinthebox/
 ├── apps/                        ← cloned at install time, updated via git pull
-│   ├── hermes-agent/            ← git clone fox-in-the-box-ai/hermes-agent@v0.1.0
-│   └── hermes-webui/            ← git clone fox-in-the-box-ai/hermes-webui@v0.1.0
+│   ├── hermes-agent/            ← git clone smelicit1-debug/hermes-agent@v0.1.0
+│   └── hermes-webui/            ← git clone smelicit1-debug/hermes-webui@v0.1.0
 ├── config/
 ├── data/
 └── logs/
@@ -169,7 +169,7 @@ for APP in hermes-agent hermes-webui; do
     rm -rf "$APPS_DIR/$APP"
     git clone --depth 1 \
       --branch "$FITB_VERSION" \
-      "https://github.com/fox-in-the-box-ai/$APP" \
+      "https://github.com/smelicit1-debug/$APP" \
       "$APPS_DIR/$APP"
     pip install -e "$APPS_DIR/$APP" --quiet
   fi
@@ -220,7 +220,7 @@ COPY --from=ui-builder /build/dist/ /app/ui/
 **Key properties:**
 - `node_modules` and build toolchain are in the builder stage and **never land in the final image**
 - `dist/` is gitignored — it lives only in CI artifacts and the container image
-- CI builds the full image (which runs both stages) → pushes to `ghcr.io/fox-in-the-box-ai/cloud:stable`
+- CI builds the full image (which runs both stages) → pushes to `ghcr.io/claw-in-the-box-ai/cloud:stable`
 - The builder stage is cached independently; a Python-only change skips the Node build entirely
 
 **Why not git-in-volume for the UI?**
@@ -302,15 +302,15 @@ Native desktop app for **Windows** (`.exe` on GitHub Releases). **macOS** uses t
 // Electron manages one container
 docker.pull('foxinthebox/cloud:stable')
 // app.getPath('userData') resolves to the OS-appropriate path automatically:
-// Windows: %APPDATA%\Fox in the Box
-// macOS:   ~/Library/Application Support/Fox in the Box
-// Linux:   ~/.config/Fox in the Box  (or FOX_DATA_DIR env override)
+// Windows: %APPDATA%\Claw in the Box
+// macOS:   ~/Library/Application Support/Claw in the Box
+// Linux:   ~/.config/Claw in the Box  (or FOX_DATA_DIR env override)
 // See REQUIREMENTS.md §4.2 for the full platform defaults table.
 const DATA_DIR = process.env.FOX_DATA_DIR || app.getPath('userData');
 
 docker.run({
-  image: 'ghcr.io/fox-in-the-box-ai/cloud:stable',
-  name: 'fox-in-the-box',
+  image: 'ghcr.io/claw-in-the-box-ai/cloud:stable',
+  name: 'claw-in-the-box',
   volumes: [`${DATA_DIR}:/data`],
   capAdd: ['NET_ADMIN'],        // Required for Tailscale
   sysctl: {'net.ipv4.ip_forward': 1},
@@ -409,19 +409,19 @@ Two systemd units installed by `install.sh`:
 # __DATA_DIR__ is substituted by install.sh with the OS-specific app data path
 # (e.g. ~/.foxinthebox on Linux — see REQUIREMENTS.md §4.2)
 [Unit]
-Description=Fox in the Box
+Description=Claw in the Box
 After=docker.service
 Requires=docker.service
 
 [Service]
 Restart=always
-ExecStart=docker run --rm --name fox-in-the-box \
+ExecStart=docker run --rm --name claw-in-the-box \
   --cap-add=NET_ADMIN \
   --device /dev/net/tun \
   -v __DATA_DIR__:/data \
   -p 8787:8787 \
   foxinthebox/cloud:stable
-ExecStop=docker stop fox-in-the-box
+ExecStop=docker stop claw-in-the-box
 
 [Install]
 WantedBy=multi-user.target
@@ -476,8 +476,8 @@ The container never sees the host filesystem except through this mount.
 | OS | Default path | Set via |
 |----|-------------|---------|
 | **Linux** | `~/.foxinthebox` | `$FOX_DATA_DIR` env var or install.sh prompt |
-| **macOS** | `~/Library/Application Support/Fox in the Box` | same |
-| **Windows** | `%APPDATA%\Fox in the Box` | Electron `app.getPath('userData')` |
+| **macOS** | `~/Library/Application Support/Claw in the Box` | same |
+| **Windows** | `%APPDATA%\Claw in the Box` | Electron `app.getPath('userData')` |
 
 > **Why different paths per OS?**
 > macOS discourages hidden dot-dirs in `~` since Catalina. Windows has a
@@ -490,14 +490,14 @@ The container never sees the host filesystem except through this mount.
 
 The fox character works *inside the box*; user files live *outside*.
 This directory is for the user's own projects, documents, and outputs
-that Fox in the Box helps with. It is **never bind-mounted into the container**
+that Claw in the Box helps with. It is **never bind-mounted into the container**
 by default — only shared explicitly by the user if they choose to.
 
 | OS | Default path |
 |----|-------------|
-| **Linux** | `~/Fox in the Box` |
-| **macOS** | `~/Documents/Fox in the Box` |
-| **Windows** | `Documents\Fox in the Box` (i.e. `%USERPROFILE%\Documents\Fox in the Box`) |
+| **Linux** | `~/Claw in the Box` |
+| **macOS** | `~/Documents/Claw in the Box` |
+| **Windows** | `Documents\Claw in the Box` (i.e. `%USERPROFILE%\Documents\Claw in the Box`) |
 
 > **Separation rule:** `APP_DATA_DIR` ≠ `WORKSPACE_DIR`. Code, config, and
 > runtime data go in the app data dir. User documents and project files go
@@ -518,8 +518,8 @@ All paths below are relative to the OS-specific default from §4.2.
 ├── apps/                           # ── REPOS ─────────────────────────────
 │   │                               # Git repos — cloned at first run,
 │   │                               # updated via git checkout vX.Y.Z
-│   ├── hermes-agent/              # fox-in-the-box-ai/hermes-agent
-│   └── hermes-webui/              # fox-in-the-box-ai/hermes-webui
+│   ├── hermes-agent/              # smelicit1-debug/hermes-agent
+│   └── hermes-webui/              # smelicit1-debug/hermes-webui
 │
 ├── config/                         # ── CONFIG ────────────────────────────
 │   │                               # User settings — NEVER overwritten
@@ -549,11 +549,11 @@ All paths below are relative to the OS-specific default from §4.2.
 ### 4.4 Workspace Directory Structure
 
 The workspace directory lives on the **host only** — never mounted into the container.
-It is the user's personal working area; Fox in the Box reads/writes it only
+It is the user's personal working area; Claw in the Box reads/writes it only
 when the user explicitly shares a file or folder.
 
 ```
-<WORKSPACE_DIR>/                    # e.g. ~/Fox in the Box on Linux
+<WORKSPACE_DIR>/                    # e.g. ~/Claw in the Box on Linux
 │                                   # NOT mounted into container
 │
 ├── projects/                       # User's AI-assisted projects
@@ -562,7 +562,7 @@ when the user explicitly shares a file or folder.
 ```
 
 > Created by install.sh on first run. Contents are the user's own files —
-> no Fox in the Box code or config ever lives here.
+> no Claw in the Box code or config ever lives here.
 
 **Configuration:**
 ```bash
@@ -841,7 +841,7 @@ Users can modify settings via:
 ### 7.1 Monorepo Structure
 
 ```
-fox-in-the-box/                    # Main integration repo
+claw-in-the-box/                    # Main integration repo
 ├── .github/
 │   ├── workflows/
 │   │   ├── build-container.yml   # Build + push Docker image
@@ -918,14 +918,14 @@ packages:
 ```json
 // package.json (root)
 {
-  "name": "fox-in-the-box",
+  "name": "claw-in-the-box",
   "private": true,
   "packageManager": "pnpm@9.0.0",
   "scripts": {
     "pull-upstream": "./packages/tools/pull-upstream.sh",
     "rebase": "./packages/tools/rebase-patches.sh",
     "test": "./packages/tools/test-integration.sh",
-    "build": "docker build -f packages/integration/Dockerfile -t ghcr.io/fox-in-the-box-ai/cloud:dev .",
+    "build": "docker build -f packages/integration/Dockerfile -t ghcr.io/claw-in-the-box-ai/cloud:dev .",
     "release": "./packages/tools/create-release.sh"
   }
 }
@@ -941,22 +941,22 @@ Each upstream dependency has a corresponding fork under your GitHub org:
 
 | Upstream | Your Fork | Purpose |
 |----------|-----------|---------|
-| `NousResearch/hermes-agent` | `fox-in-the-box-ai/hermes-agent` | Bedrock fixes, custom patches |
-| `upstream/hermes-webui` | `fox-in-the-box-ai/hermes-webui` | Simplified UI, onboarding integration |
+| `NousResearch/hermes-agent` | `smelicit1-debug/hermes-agent` | Bedrock fixes, custom patches |
+| `upstream/hermes-webui` | `smelicit1-debug/hermes-webui` | Simplified UI, onboarding integration |
 | `Mem0ai/mem0` | Use as-is or fork if needed | Memory provider |
 | `usememos/memos` | Use upstream image directly | Notes app (no modifications planned) *(post-MVP, v0.2+)* |
 
 ### 8.2 Branch Strategy Per Fork
 
 ```
-fox-in-the-box-ai/hermes-agent:
+smelicit1-debug/hermes-agent:
 ├── main              # Synced with upstream exactly
 ├── dev               # Integration testing branch
 ├── bedrock           # Bedrock-specific patches
 ├── custom            # Fox-specific modifications
 └── pr/*              # Clean branches for upstream PRs
 
-fox-in-the-box-ai/hermes-webui:
+smelicit1-debug/hermes-webui:
 ├── main              # Synced with upstream exactly
 ├── dev               # Integration testing branch
 ├── simplified-ui     # Clutter removal, custom interface
@@ -1011,7 +1011,7 @@ Weeks 5-8: Stability period, bug fixes only
 
 ### 9.1 Versioning
 
-- **Container tags:** `ghcr.io/fox-in-the-box-ai/cloud:v0.1.0`, `:stable`, `:latest` (semver)
+- **Container tags:** `ghcr.io/claw-in-the-box-ai/cloud:v0.1.0`, `:stable`, `:latest` (semver)
 - **Electron app versions:** `0.1.0`, `0.2.0`, etc. (semver, always in sync with container version)
 - **Fork tags:** `v0.1.0` on each fork repo (same tag as container release)
 
@@ -1019,10 +1019,10 @@ Weeks 5-8: Stability period, bug fixes only
 
 | Artifact | Registry/Platform |
 |----------|------------------|
-| Docker image | GHCR (`ghcr.io/fox-in-the-box-ai/cloud:stable`) |
+| Docker image | GHCR (`ghcr.io/claw-in-the-box-ai/cloud:stable`) |
 | Windows installer (.exe) | GitHub Releases |
 | macOS (`install.sh` + Docker, systemd/launchd) | README / raw script on `main` |
-| Source code | GitHub (`fox-in-the-box-ai` org, tagged release) |
+| Source code | GitHub (`claw-in-the-box-ai` org, tagged release) |
 
 ### 9.3 Auto-Update Channels
 
@@ -1083,7 +1083,7 @@ By design — privacy is a core value. No usage analytics, crash reporting, or t
 
 | Component | License |
 |-----------|---------|
-| Fox in the Box (integration) | MIT |
+| Claw in the Box (integration) | MIT |
 | Documentation | CC-BY-4.0 |
 | Hermes Agent fork | MIT (matches upstream) |
 | Hermes WebUI fork | MIT (matches upstream) |
@@ -1168,7 +1168,7 @@ https://hermes.tail873f17.ts.net (tailnet only)
 | 8 | Multi-user support | Single user only. Not a priority. Simple architecture exploration post-MVP |
 | 9 | Local model support | Ollama. Silent install via bridge (desktop) or manual (server). In MVP |
 | 10 | Telemetry | None. Not even opt-in. Privacy is a core value |
-| 11 | GitHub org name | `fox-in-the-box` |
+| 11 | GitHub org name | `claw-in-the-box` |
 | 12 | Monorepo tooling | pnpm workspaces + git submodules |
 | 13 | Container strategy | Single monolithic container. Compose as optional advanced mode post-MVP |
 | 14 | Reverse proxy | None — Tailscale Serve handles HTTPS routing |
@@ -1196,8 +1196,8 @@ https://hermes.tail873f17.ts.net (tailnet only)
 | 24 | Config hierarchy | Three layers: env vars (highest) → `/data/config/` (user) → `/app/defaults/` (container). API keys in `hermes.env`, overridable via env vars. Onboarding state not overridable |
 | 25 | Ollama on server | Always on host, never in container. Fox connects via `host-gateway:11434`. install.sh detects existing Ollama, offers install if missing. Models stay on host (too large for container) |
 | 26 | Domain name | `foxinthebox.io` |
-| 27 | GitHub org | `fox-in-the-box-ai` |
-| 28 | Container image registry | GHCR (`ghcr.io/fox-in-the-box-ai/cloud:stable`). No Docker Hub pull rate limits, integrated with GitHub Actions, free for public repos. Docker Hub as optional mirror post-MVP |
+| 27 | GitHub org | `claw-in-the-box-ai` |
+| 28 | Container image registry | GHCR (`ghcr.io/claw-in-the-box-ai/cloud:stable`). No Docker Hub pull rate limits, integrated with GitHub Actions, free for public repos. Docker Hub as optional mirror post-MVP |
 | 29 | Memos iframe cross-origin | *(post-MVP)* Memos is out of v0.1 scope. Decision deferred to v0.2. |
 | 30 | React UI build strategy | Multi-stage Dockerfile: `node:20-slim AS ui-builder` builds `dist/`, `COPY --from=ui-builder` bakes it into the final image. No Node.js on user machines. `dist/` gitignored. Applies from v0.2+; v0.1 uses plain HTML. See §3.3 |
 
@@ -1242,7 +1242,7 @@ https://hermes.tail873f17.ts.net (tailnet only)
 
 | Term | Definition |
 |------|-----------|
-| **Fox in the Box** | The product — packaged AI assistant platform |
+| **Claw in the Box** | The product — packaged AI assistant platform |
 | **fox in the box** | The brand (lowercase for logos/UI) |
 | **Hermes Agent** | Open-source AI agent framework by Nous Research |
 | **Hermes WebUI** | Browser-based chat interface for Hermes Agent |

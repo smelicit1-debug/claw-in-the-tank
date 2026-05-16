@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — Fox in the Box installer (Linux & macOS)
+# install.sh — Claw in the Box installer (Linux & macOS)
 # Usage: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
 #   or:  bash install.sh
 #
@@ -20,8 +20,8 @@ success() { echo -e "${GREEN}[fox]${NC} $*"; }
 warn()    { echo -e "${YELLOW}[fox]${NC} $*"; }
 die()     { echo -e "${RED}[fox] ERROR:${NC} $*" >&2; exit 1; }
 
-IMAGE="ghcr.io/fox-in-the-box-ai/cloud:stable"
-CONTAINER="fox-in-the-box"
+IMAGE="ghcr.io/claw-in-the-box-ai/cloud:stable"
+CONTAINER="claw-in-the-box"
 
 ##############################################################################
 # 1. Detect OS
@@ -44,10 +44,10 @@ info "Detected platform: $PLATFORM"
 
 if [[ "$PLATFORM" == "linux" ]]; then
   DEFAULT_DATA_DIR="$HOME/.foxinthebox"
-  DEFAULT_WORKSPACE_DIR="$HOME/Fox in the Box"
+  DEFAULT_WORKSPACE_DIR="$HOME/Claw in the Box"
 elif [[ "$PLATFORM" == "macos" ]]; then
-  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Fox in the Box"
-  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Fox in the Box"
+  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Claw in the Box"
+  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Claw in the Box"
 fi
 
 DATA_DIR="${FOX_DATA_DIR:-$DEFAULT_DATA_DIR}"
@@ -190,7 +190,7 @@ _explain_tailscale() {
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo
   echo "  Tailscale is a free VPN tool that lets you securely"
-  echo "  access Fox in the Box from anywhere — your phone,"
+  echo "  access Claw in the Box from anywhere — your phone,"
   echo "  laptop, or any other device — without opening ports"
   echo "  in your firewall or dealing with IP addresses."
   echo
@@ -201,7 +201,7 @@ _explain_tailscale() {
   echo "    • Free for personal use (up to 100 devices)"
   echo
   echo "  Without Tailscale (port only):"
-  echo "    • Fox in the Box is available at http://localhost:8787"
+  echo "    • Claw in the Box is available at http://localhost:8787"
   echo "    • Accessible on your local network if your firewall allows it"
   echo "    • No remote access unless you set up your own reverse proxy"
   echo
@@ -214,7 +214,7 @@ _explain_tailscale() {
 _prompt_access_mode() {
   while true; do
     echo
-    echo "How do you want to access Fox in the Box?"
+    echo "How do you want to access Claw in the Box?"
     echo "  [1] Port only (http://localhost:8787 + LAN if firewall permits)"
     echo "  [2] Tailscale only (private HTTPS from anywhere, free)"
     echo "  [3] Both (port binding + Tailscale)"
@@ -408,7 +408,7 @@ FITB_TAILSCALE_URL=""
 FITB_TS_UP_PID=""
 _obtain_tailscale_login_url() {
   local url="" waited=0 poll_max="${FOX_TAILSCALE_URL_POLL_SEC:-180}"
-  local cap="${TMPDIR:-/tmp}/fitb-tailscale-login.$$.$RANDOM.log"
+  local cap="${TMPDIR:-/tmp}/citb-tailscale-login.$$.$RANDOM.log"
   rm -f "$cap"
   FITB_TAILSCALE_URL=""
   FITB_TS_UP_PID=""
@@ -501,7 +501,7 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
 
   # ── Headless: reusable install auth key (no browser, stable for automation) ──
   if [[ -n "${FOX_TAILSCALE_AUTHKEY:-}" ]]; then
-    _ak_log="${TMPDIR:-/tmp}/fitb-tailscale-authkey.$$.$RANDOM.log"
+    _ak_log="${TMPDIR:-/tmp}/citb-tailscale-authkey.$$.$RANDOM.log"
     info "Tailscale: joining with FOX_TAILSCALE_AUTHKEY (no browser URL)…"
     set +e
     # TS_AUTHKEY is read by tailscale up; never echo the key.
@@ -525,7 +525,7 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
     if [[ "$_ts_url_rc" -ne 0 || -z "$LOGIN_URL" ]]; then
       warn "Tailscale login URL not discovered automatically after polling."
       warn "Daemon stderr: $DOCKER_CMD exec $CONTAINER tail -80 /data/logs/tailscaled.err"
-      warn "Host capture: ls -t ${TMPDIR:-/tmp}/fitb-tailscale-login.* 2>/dev/null | head -1"
+      warn "Host capture: ls -t ${TMPDIR:-/tmp}/citb-tailscale-login.* 2>/dev/null | head -1"
     else
       echo
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -620,9 +620,9 @@ fi
 # GitHub instead and write them to a temp directory.
 _download_service_files() {
   local DEST="$1"
-  local RAW_BASE="https://raw.githubusercontent.com/fox-in-the-box-ai/fox-in-the-box/main/packages/scripts"
+  local RAW_BASE="https://raw.githubusercontent.com/claw-in-the-box-ai/claw-in-the-box/main/packages/scripts"
   mkdir -p "$DEST"
-  for FILE in foxinthebox.service foxinthebox-updater.service foxinthebox-updater.path io.foxinthebox.plist; do
+  for FILE in foxinthebox.service foxinthebox-updater.service foxinthebox-updater.path com.openclawtank.claw.plist; do
     curl -fsSL "$RAW_BASE/$FILE" -o "$DEST/$FILE" 2>/dev/null || true
   done
 }
@@ -662,9 +662,9 @@ elif [[ "$PLATFORM" == "macos" ]]; then
   info "Installing launchd agent…"
   LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
   mkdir -p "$LAUNCH_AGENTS"
-  PLIST="$LAUNCH_AGENTS/io.foxinthebox.plist"
+  PLIST="$LAUNCH_AGENTS/com.openclawtank.claw.plist"
 
-  cp "$SCRIPT_DIR/io.foxinthebox.plist" "$PLIST"
+  cp "$SCRIPT_DIR/com.openclawtank.claw.plist" "$PLIST"
 
   # Patch data dir into plist
   sed -i '' "s|__DATA_DIR__|$DATA_DIR|g" "$PLIST"
@@ -681,7 +681,7 @@ fi
 ##############################################################################
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-success "Fox in the Box is installed!"
+success "Claw in the Box is installed!"
 echo
 echo "  Container  : $CONTAINER"
 echo
@@ -703,7 +703,7 @@ echo "  Stop       : docker stop $CONTAINER"
 if [[ "$PLATFORM" == "linux" ]]; then
   echo "  Service   : systemctl status foxinthebox"
 else
-  echo "  Service   : launchctl list io.foxinthebox"
+  echo "  Service   : launchctl list com.openclawtank.claw"
 fi
 echo
 if [[ "$ACCESS_MODE" == "1" || "$ACCESS_MODE" == "3" ]]; then

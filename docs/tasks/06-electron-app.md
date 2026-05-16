@@ -13,7 +13,7 @@
 
 ## Summary
 
-Build the Electron desktop app that manages the Fox in the Box Docker container.
+Build the Electron desktop app that manages the Claw in the Box Docker container.
 The app is a **tray-only** application — no persistent window is shown after
 initial setup dialogs. It checks for Docker, pulls the container image if
 missing, starts the container, polls until healthy, then opens the browser and
@@ -29,7 +29,7 @@ process only.
 
 ## Prerequisites
 
-1. **Task 01 complete** — GitHub repository exists; `ghcr.io/fox-in-the-box-ai/cloud:stable`
+1. **Task 01 complete** — GitHub repository exists; `ghcr.io/claw-in-the-box-ai/cloud:stable`
    is the canonical image ref used throughout this task.
 2. **Task 02 complete** — monorepo scaffold is in place (`pnpm` workspaces,
    `packages/` directory exists).
@@ -50,10 +50,10 @@ process only.
 | Packaging          | `electron-builder` via `pnpm build`                              |
 | Windows target     | NSIS `.exe` installer, x64                                        |
 | macOS target       | Unsigned `.zip` of `.app` (no Apple Developer account required)  |
-| App ID             | `io.foxinthebox.desktop`                                         |
-| Product name       | `Fox in the Box`                                                  |
-| Container image    | `ghcr.io/fox-in-the-box-ai/cloud:stable`                         |
-| Container name     | `fox-in-the-box`                                                  |
+| App ID             | `com.openclawtank.claw.desktop`                                         |
+| Product name       | `Claw in the Box`                                                  |
+| Container image    | `ghcr.io/claw-in-the-box-ai/cloud:stable`                         |
+| Container name     | `claw-in-the-box`                                                  |
 | Data volume        | `~/.foxinthebox:/data`                                           |
 | Port binding       | `127.0.0.1:8787:8787`                                            |
 
@@ -87,9 +87,9 @@ Verify the workspace root's `pnpm-workspace.yaml` already references
 
 ```json
 {
-  "name": "@fox-in-the-box/electron",
+  "name": "@claw-in-the-box/electron",
   "version": "0.1.0",
-  "description": "Fox in the Box desktop app",
+  "description": "Claw in the Box desktop app",
   "main": "src/main.js",
   "scripts": {
     "start": "electron .",
@@ -121,9 +121,9 @@ Verify the workspace root's `pnpm-workspace.yaml` already references
 ### Step 3 — `packages/electron/electron-builder.yml`
 
 ```yaml
-appId: io.foxinthebox.desktop
-productName: Fox in the Box
-copyright: "Copyright © 2024 Fox in the Box AI"
+appId: com.openclawtank.claw.desktop
+productName: Claw in the Box
+copyright: "Copyright © 2024 Claw in the Box AI"
 
 directories:
   output: dist
@@ -140,7 +140,7 @@ win:
     - target: nsis
       arch:
         - x64
-  artifactName: "fox-in-the-box-setup-${version}-${arch}.exe"
+  artifactName: "claw-in-the-box-setup-${version}-${arch}.exe"
 
 nsis:
   oneClick: true
@@ -154,7 +154,7 @@ mac:
       arch:
         - x64
         - arm64
-  artifactName: "fox-in-the-box-${version}-${arch}-mac.zip"
+  artifactName: "claw-in-the-box-${version}-${arch}-mac.zip"
   identity: null   # unsigned build
 
 publish: null      # no auto-update endpoint yet
@@ -173,8 +173,8 @@ no `child_process` shell-outs to `docker` CLI for container management.
 const Dockerode = require('dockerode');
 const log = require('electron-log');
 
-const IMAGE  = 'ghcr.io/fox-in-the-box-ai/cloud:stable';
-const CNAME  = 'fox-in-the-box';
+const IMAGE  = 'ghcr.io/claw-in-the-box-ai/cloud:stable';
+const CNAME  = 'claw-in-the-box';
 const PORT   = '8787/tcp';
 
 let docker = null;
@@ -244,7 +244,7 @@ async function getRunningContainer() {
 }
 
 /**
- * Start the Fox container. Assumes image is already present.
+ * Start the Claw container. Assumes image is already present.
  * Returns the container object.
  */
 async function startContainer() {
@@ -452,7 +452,7 @@ function createTray(running) {
   tray      = new Tray(ICON_PATH);
   isRunning = running;
 
-  tray.setToolTip('Fox in the Box');
+  tray.setToolTip('Claw in the Box');
   buildMenu();
 
   log.info('Tray created');
@@ -491,7 +491,7 @@ app.on('window-all-closed', (e) => e.preventDefault());
 
 app.whenReady().then(main).catch((err) => {
   log.error('Fatal startup error:', err);
-  dialog.showErrorBox('Fox in the Box — startup error', err.message);
+  dialog.showErrorBox('Claw in the Box — startup error', err.message);
   app.quit();
 });
 
@@ -520,7 +520,7 @@ async function installDocker() {
     cancelId: 1,
     title: 'Docker not found',
     message: 'Docker Desktop is required but was not found.',
-    detail: `Fox in the Box will run:\n\n  ${instruction}\n\nThis may take several minutes.`,
+    detail: `Claw in the Box will run:\n\n  ${instruction}\n\nThis may take several minutes.`,
   });
 
   if (response !== 0) throw new Error('User cancelled Docker installation');
@@ -534,7 +534,7 @@ async function installDocker() {
 // ─── Main startup sequence ───────────────────────────────────────────────────
 
 async function main() {
-  log.info('Fox in the Box starting up');
+  log.info('Claw in the Box starting up');
 
   // 1. Initialise Docker client
   docker.init();
@@ -547,7 +547,7 @@ async function main() {
     if (!dockerRunning) {
       throw new Error(
         'Docker daemon still not reachable after install. ' +
-        'Please start Docker Desktop manually and relaunch Fox in the Box.'
+        'Please start Docker Desktop manually and relaunch Claw in the Box.'
       );
     }
   }
@@ -560,8 +560,8 @@ async function main() {
       const notice = dialog.showMessageBox({
         type: 'info',
         buttons: [],
-        title: 'Fox in the Box',
-        message: 'Downloading Fox in the Box…',
+        title: 'Claw in the Box',
+        message: 'Downloading Claw in the Box…',
         detail: 'This only happens once. Please wait.',
       });
       docker.pullImage((pct) => log.info(`Pull progress: ${pct}%`))
@@ -711,7 +711,7 @@ All criteria must pass before this task is considered complete.
 | #  | Criterion | How to verify |
 |----|-----------|---------------|
 | 1  | `pnpm build` in `packages/electron/` exits 0 and produces installer artifacts | Run on `windows-latest` and `macos-latest` GitHub Actions runners; check `dist/` for `.exe` and `.zip` |
-| 2  | On launch with Docker running and container not started: container is running within 15 seconds | Start app with container absent; run `docker ps --filter name=fox-in-the-box` within 15 s |
+| 2  | On launch with Docker running and container not started: container is running within 15 seconds | Start app with container absent; run `docker ps --filter name=claw-in-the-box` within 15 s |
 | 3  | Browser opens to `http://localhost:8787` after container passes health check | Observe default browser launch during manual test |
 | 4  | Tray appears with items in correct order: status label → Open Fox → Restart Fox → Stop Fox → *(separator)* → Quit | Right-click tray icon and verify menu order visually |
 | 5  | "Stop Fox" from tray: container stops, status label updates to "Fox is stopped" | Click Stop Fox; run `docker ps` to confirm no running container; re-open tray menu |
@@ -737,7 +737,7 @@ Run with:
 
 ```bash
 # From workspace root
-pnpm --filter @fox-in-the-box/electron test
+pnpm --filter @claw-in-the-box/electron test
 # or
 cd packages/electron && npx jest --testPathPattern=tests/electron
 ```
@@ -752,7 +752,7 @@ Performed by a human tester on a real machine (Windows primary, macOS secondary)
 - [ ] 2. Docker installed but not running → app surfaces clear error dialog and exits gracefully.
 - [ ] 3. First launch (image absent): pull progress logged to `electron-log` log file; container starts after pull completes.
 - [ ] 4. Subsequent launch (image present): container starts without pull step, startup is faster.
-- [ ] 5. Tray icon visible in system tray with correct tooltip ("Fox in the Box").
+- [ ] 5. Tray icon visible in system tray with correct tooltip ("Claw in the Box").
 - [ ] 6. "Open Fox" menu item opens `http://localhost:8787` in default browser.
 - [ ] 7. "Restart Fox" restarts container; browser reload shows app is back up within ~15 s.
 - [ ] 8. "Stop Fox" stops container; status label updates; "Start Fox" re-appears in menu.
@@ -809,7 +809,7 @@ This means the container disappears automatically once stopped — no explicit
 ### Logging
 
 `electron-log` writes to the platform default log directory:
-- **Windows:** `%APPDATA%\Fox in the Box\logs\main.log`
-- **macOS:** `~/Library/Logs/Fox in the Box/main.log`
+- **Windows:** `%APPDATA%\Claw in the Box\logs\main.log`
+- **macOS:** `~/Library/Logs/Claw in the Box/main.log`
 
 Include the log path in any user-facing error dialog to help with support.

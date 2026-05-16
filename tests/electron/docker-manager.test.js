@@ -133,7 +133,7 @@ test('buildContainerCreateOptions both mode uses LAN bind and Tailscale caps', (
 
 test('startContainer reuses existing stopped container when present', async () => {
   mockDockerInstance.listContainers.mockResolvedValueOnce([
-    { Id: 'abc', State: 'exited', Names: ['/fox-in-the-box'] },
+    { Id: 'abc', State: 'exited', Names: ['/claw-in-the-box'] },
   ]);
   const mockContainer = { start: jest.fn().mockResolvedValue({}) };
   mockDockerInstance.getContainer.mockReturnValue(mockContainer);
@@ -146,7 +146,7 @@ test('startContainer reuses existing stopped container when present', async () =
 
 test('ensureContainerRunning reports already-running reason', async () => {
   mockDockerInstance.listContainers.mockResolvedValueOnce([
-    { Id: 'run1', State: 'running', Names: ['/fox-in-the-box'] },
+    { Id: 'run1', State: 'running', Names: ['/claw-in-the-box'] },
   ]);
   mockDockerInstance.getContainer.mockReturnValue({ start: jest.fn() });
   const result = await docker.ensureContainerRunning();
@@ -155,7 +155,7 @@ test('ensureContainerRunning reports already-running reason', async () => {
 
 test('ensureContainerRunning reports started-existing reason', async () => {
   mockDockerInstance.listContainers.mockResolvedValueOnce([
-    { Id: 'stop1', State: 'exited', Names: ['/fox-in-the-box'] },
+    { Id: 'stop1', State: 'exited', Names: ['/claw-in-the-box'] },
   ]);
   const mockContainer = { start: jest.fn().mockResolvedValue({}) };
   mockDockerInstance.getContainer.mockReturnValue(mockContainer);

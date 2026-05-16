@@ -35,7 +35,7 @@ function show({ version, releaseNotes }) {
     minimizable: false,
     maximizable: false,
     alwaysOnTop: true,
-    title: 'Fox in the box — Update available',
+    title: 'Claw in the Box — Update available',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -58,7 +58,7 @@ function showDownloaded({ version }) {
     minimizable: false,
     maximizable: false,
     alwaysOnTop: true,
-    title: 'Fox in the box — Ready to install',
+    title: 'Claw in the Box — Ready to install',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
@@ -134,16 +134,16 @@ function buildHtml(version) {
     later.disabled = true;
     progress.style.display = 'block';
 
-    const unsub = window.foxUpdater.on('update:progress', ({ percent }) => {
+    const unsub = window.clawUpdater.on('update:progress', ({ percent }) => {
       bar.style.width = percent + '%';
     });
 
-    window.foxUpdater.on('update:downloaded', () => {
+    window.clawUpdater.on('update:downloaded', () => {
       unsub();
       window.close();
     });
 
-    window.foxUpdater.on('update:error', ({ message }) => {
+    window.clawUpdater.on('update:error', ({ message }) => {
       unsub();
       download.disabled = false;
       download.textContent = 'Retry';
@@ -151,7 +151,7 @@ function buildHtml(version) {
       alert('Download failed: ' + message);
     });
 
-    await window.foxUpdater.download();
+    await window.clawUpdater.download();
   };
 </script>
 </body>
@@ -198,14 +198,14 @@ function buildReadyHtml(version) {
 </head>
 <body>
 <h2>Ready to install</h2>
-<p>Version <span class="version">${version}</span> has been downloaded. Restart Fox in the box to apply the update.</p>
+<p>Version <span class="version">${version}</span> has been downloaded. Restart Claw in the Box to apply the update.</p>
 <div class="actions">
   <button class="secondary" id="btn-later">Restart later</button>
   <button class="primary"   id="btn-install">Restart and install</button>
 </div>
 <script>
   document.getElementById('btn-later').onclick   = () => window.close();
-  document.getElementById('btn-install').onclick = () => window.foxUpdater.install();
+  document.getElementById('btn-install').onclick = () => window.clawUpdater.install();
 </script>
 </body>
 </html>`;

@@ -1,8 +1,8 @@
 !macro customInit
-  DetailPrint "Stopping running Fox in the box processes..."
+  DetailPrint "Stopping running Claw in the Box processes..."
   nsExec::ExecToLog 'taskkill /IM "FoxInTheBox.exe" /F /T'
-  nsExec::ExecToLog 'taskkill /IM "Fox in the Box.exe" /F /T'
-  nsExec::ExecToLog 'taskkill /IM "fox-in-the-box.exe" /F /T'
+  nsExec::ExecToLog 'taskkill /IM "Claw in the Box.exe" /F /T'
+  nsExec::ExecToLog 'taskkill /IM "claw-in-the-box.exe" /F /T'
   Sleep 1000
 !macroend
 

@@ -157,7 +157,7 @@ Recent (last 30 days) upstream features identifiable from changelog/commit subje
 - `api/extensions.py` (added 2026-05-01, 14 days old): script-injection + sandboxed-static extension hooks via env vars `HERMES_WEBUI_EXTENSION_DIR`, `HERMES_WEBUI_EXTENSION_SCRIPT_URLS`, `HERMES_WEBUI_EXTENSION_STYLESHEET_URLS`. Cap of 32 URLs per env var. **This is a brand-new surface Fox should evaluate, but it covers static-asset overlays and JS injection only — it cannot cover Python route additions or onboarding rewrites.** Fox's 22 new Python files cannot live here.
 - `HERMES_WEBUI_AGENT_DIR` env var: hermes-agent path discovery. Fox uses.
 - `SKIP_ONBOARDING` env var: skip upstream wizard. Fox uses.
-- `HERMES_WEBUI_EXTENSION_*`: script/style injection. Fox does NOT yet use; could replace some of `static/fox-in-the-box.{css,js}` overlay.
+- `HERMES_WEBUI_EXTENSION_*`: script/style injection. Fox does NOT yet use; could replace some of `static/claw-in-the-box.{css,js}` overlay.
 
 **Verdict on extensibility.** Upstream's extension surface is intentionally narrow ("self-hosted extension surface: configured same-origin script/style injection plus sandboxed static file serving"). It is sufficient for branding overlays, **insufficient for Fox's Python additions**. Fox's overlay needs will not be served by upstream's extension model alone.
 
@@ -216,7 +216,7 @@ The SQLite `state.db` has had at least one schema migration with a "bridge" — 
 
 **Scenario A: nesquena rewrites the frontend in React.**
 - *Detection:* No tripwire today. The first signal would be a feature branch like `react-rewrite/` appearing on the upstream remote, or a series of commits with `feat(react): …` subjects. Fox would notice on the next `git fetch upstream && git log upstream/master`.
-- *Reaction time:* Fox's overlay (`static/fox-in-the-box.{css,js}`, all of `static/panels.js` modifications) is built against vanilla-JS DOM. A React rewrite would invalidate **100% of Fox's static/ patches** (the ~3,000+ LOC of static modifications).
+- *Reaction time:* Fox's overlay (`static/claw-in-the-box.{css,js}`, all of `static/panels.js` modifications) is built against vanilla-JS DOM. A React rewrite would invalidate **100% of Fox's static/ patches** (the ~3,000+ LOC of static modifications).
 - *Probability assessment:* No git evidence of this in any current branch. Risk over 6 months: low-to-moderate. Maintainer is on a feature treadmill, not a rewrite.
 
 **Scenario B: NousResearch decides to ship their own official WebUI.**

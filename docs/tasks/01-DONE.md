@@ -8,18 +8,18 @@
 
 ## What Was Done
 
-1. **GitHub org confirmed** — `fox-in-the-box-ai` already existed (Stan created it).
+1. **GitHub org confirmed** — `claw-in-the-box-ai` already existed (Stan created it).
 
-2. **Main monorepo created** — `fox-in-the-box-ai/fox-in-the-box` created via API:
+2. **Main monorepo created** — `claw-in-the-box-ai/claw-in-the-box` created via API:
    - Public repo, MIT license, default branch `main`
-   - URL: https://github.com/fox-in-the-box-ai/fox-in-the-box
+   - URL: https://github.com/smelicit1-debug/claw-in-the-box
 
-3. **hermes-agent fork created** — Forked `NousResearch/hermes-agent` into `fox-in-the-box-ai/hermes-agent`:
-   - URL: https://github.com/fox-in-the-box-ai/hermes-agent
+3. **hermes-agent fork created** — Forked `NousResearch/hermes-agent` into `smelicit1-debug/hermes-agent`:
+   - URL: https://github.com/smelicit1-debug/hermes-agent
    - Upstream: NousResearch/hermes-agent, default branch `main`
 
-4. **hermes-webui fork created** — Forked `nesquena/hermes-webui` into `fox-in-the-box-ai/hermes-webui`:
-   - URL: https://github.com/fox-in-the-box-ai/hermes-webui
+4. **hermes-webui fork created** — Forked `nesquena/hermes-webui` into `smelicit1-debug/hermes-webui`:
+   - URL: https://github.com/smelicit1-debug/hermes-webui
    - Upstream: nesquena/hermes-webui, default branch `master`
    - Note: upstream default branch is `master`, not `main` — submodule config in task 02 should use `master`
 
@@ -34,11 +34,11 @@
 
 | # | Criterion | Result |
 |---|-----------|--------|
-| 1 | `fox-in-the-box-ai` org exists | ✅ PASS |
-| 2 | `fox-in-the-box-ai/fox-in-the-box` exists, default branch `main` | ✅ PASS |
-| 3 | `fox-in-the-box-ai/hermes-agent` exists as fork of NousResearch/hermes-agent | ✅ PASS |
-| 4 | `fox-in-the-box-ai/hermes-webui` exists as fork of nesquena/hermes-webui | ✅ PASS |
-| 5 | All three repos visible under `fox-in-the-box-ai` org | ✅ PASS |
+| 1 | `claw-in-the-box-ai` org exists | ✅ PASS |
+| 2 | `claw-in-the-box-ai/claw-in-the-box` exists, default branch `main` | ✅ PASS |
+| 3 | `smelicit1-debug/hermes-agent` exists as fork of NousResearch/hermes-agent | ✅ PASS |
+| 4 | `smelicit1-debug/hermes-webui` exists as fork of nesquena/hermes-webui | ✅ PASS |
+| 5 | All three repos visible under `claw-in-the-box-ai` org | ✅ PASS |
 | 6 | Admin access confirmed (token has admin rights to all three) | ✅ PASS |
 
 ---

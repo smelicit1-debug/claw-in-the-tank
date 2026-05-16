@@ -3,7 +3,7 @@
 /**
  * preload.js — contextBridge between renderer (web UI) and main process
  *
- * Exposes a minimal `window.foxUpdater` API so the web UI can:
+ * Exposes a minimal `window.clawUpdater` API so the web UI can:
  *  - Trigger an update check
  *  - Download an available update
  *  - Install (quit and apply) a downloaded update
@@ -12,7 +12,7 @@
 
 const { contextBridge, ipcRenderer } = require('electron');
 
-contextBridge.exposeInMainWorld('foxUpdater', {
+contextBridge.exposeInMainWorld('clawUpdater', {
   /** Trigger a manual update check */
   check: () => ipcRenderer.invoke('update:check'),
 

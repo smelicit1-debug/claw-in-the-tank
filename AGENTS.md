@@ -1,33 +1,23 @@
-# Fox in the Box — Cursor Development Instructions
+# Claw in the Box — Development Instructions
 
-This file governs how Cursor (and any AI coding agent) works in this repository.
+This file governs how AI agents work in this repository.
 Read it in full before writing any code.
+
+This is a **rebranded fork** of [fox-in-the-box](https://github.com/fox-in-the-box-ai/fox-in-the-box) by **OpenClawTank**.
+If you need to understand the original design rationale, check `docs/archive/`.
 
 ---
 
 ## 1. Your Role
 
 You are the **implementer**. You write code, tests, and config files.
-You do NOT commit, push, or open PRs on your own.
-
-A separate **Supervisor agent (Hermes)** reviews all changes before they are committed.
-The workflow is: **you implement → Supervisor reviews → Supervisor commits**.
-
-Do not bypass this. Do not `git push` under any circumstances.
-
-**You MUST make a WIP draft commit** when you are done (see Section 6 — Signal Done).
-This protects your work from being lost if the worktree directory is touched.
-The Supervisor will amend the commit message and push.
-
----
-
-## 2. Repository Layout
+A separate supervisor agent reviews changes before they are committed.
 
 ```
-fox-in-the-box/             ← monorepo root
+claw-in-the-box/             ← monorepo root
 ├── forks/
-│   ├── hermes-agent/       ← git submodule (fox-in-the-box-ai/hermes-agent)
-│   └── hermes-webui/       ← git submodule (fox-in-the-box-ai/hermes-webui)
+│   ├── hermes-agent/       ← git submodule (smelicit1-debug/hermes-agent)
+│   └── hermes-webui/       ← git submodule (smelicit1-debug/hermes-webui)
 ├── packages/
 │   ├── integration/        ← Dockerfile, supervisord, entrypoint, default-configs
 │   ├── electron/           ← Electron desktop app
@@ -60,10 +50,10 @@ Each task runs in its own **git worktree** to keep work isolated.
 
 ```bash
 # Supervisor creates the worktree for you before handing you the task:
-git worktree add ../fitb-task-03 -b task/03-dockerfile
+git worktree add ../citb-task-03 -b task/03-dockerfile
 
 # You work inside that directory:
-cd ../fitb-task-03
+cd ../citb-task-03
 
 # When done, you signal completion. Supervisor reviews and commits.
 # Supervisor merges back to main and removes the worktree.
@@ -136,11 +126,11 @@ cd tests/container && bats test_install.bats
 ### Container smoke test
 ```bash
 git submodule update --init --recursive
-docker build -f packages/integration/Dockerfile -t fitb:test .
-docker run -d --name fitb-test --cap-add=NET_ADMIN --device /dev/net/tun -p 127.0.0.1:8787:8787 fitb:test
+docker build -f packages/integration/Dockerfile -t citb:test .
+docker run -d --name citb-test --cap-add=NET_ADMIN --device /dev/net/tun -p 127.0.0.1:8787:8787 citb:test
 sleep 20
 curl -f http://localhost:8787/health
-docker stop fitb-test && docker rm fitb-test
+docker stop citb-test && docker rm citb-test
 ```
 (First `/health` may take a few tens of seconds on a slow machine; Hermes is already in the image, so clone/pip-on-start is not the bottleneck.)
 

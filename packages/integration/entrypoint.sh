@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# /app/entrypoint.sh — Fox in the Box container entrypoint
+# /app/entrypoint.sh — Claw in the Box container entrypoint
 set -euo pipefail
 
 # ── Constants ─────────────────────────────────────────────────────────────────
@@ -143,7 +143,7 @@ chown -R foxinthebox:foxinthebox \
     /data/logs \
     /data/state
 # /data/run is kept root-owned (reserved for future use; supervisord pid/socket are
-# under /run/fitb so bind-mounted /data from Docker Desktop does not break AF_UNIX).
+# under /run/citb so bind-mounted /data from Docker Desktop does not break AF_UNIX).
 # /data/data/tailscale is kept root-owned so tailscaled can write state.
 chown root:root /data/run /data/data/tailscale
 
@@ -263,8 +263,8 @@ SUPERVISORD_CONF="/etc/supervisor/supervisord.conf"
 sed -i "s|__BRAVE_API_KEY__|${BRAVE_API_KEY:-}|g" "$SUPERVISORD_CONF"
 
 # ── 6c. Supervisord RPC socket directory (must not be on a host bind-mounted /data)
-mkdir -p /run/fitb
-chmod 755 /run/fitb
+mkdir -p /run/citb
+chmod 755 /run/citb
 
 # ── 7. Hand off to supervisord ─────────────────────────────────────────────────
 echo "[entrypoint] Starting supervisord ..."

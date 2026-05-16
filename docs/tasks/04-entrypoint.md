@@ -35,7 +35,7 @@
     35|
     36|```bash
     37|#!/usr/bin/env bash
-    38|# /app/entrypoint.sh — Fox in the Box container entrypoint
+    38|# /app/entrypoint.sh — Claw in the Box container entrypoint
     39|set -euo pipefail
     40|
     41|# ── Constants ─────────────────────────────────────────────────────────────────
@@ -102,7 +102,7 @@
    102|    rm -rf "$DEST"
    103|    if ! git clone --depth 1 \
    104|            --branch "$FITB_VERSION" \
-   105|            "https://github.com/fox-in-the-box-ai/$APP" \
+   105|            "https://github.com/smelicit1-debug/$APP" \
    106|            "$DEST"; then
    107|        echo "[entrypoint] ERROR: Failed to clone $APP. Check network and try again."
    108|        echo "[entrypoint] If offline, manually place a git repo at $DEST and restart."
@@ -200,7 +200,7 @@
    200|A commented-out template. Users copy/rename this to `hermes.env` and fill in their keys. The entrypoint loads `hermes.env` (not the template) if it exists.
    201|
    202|```bash
-   203|# hermes.env — Fox in the Box environment overrides
+   203|# hermes.env — Claw in the Box environment overrides
    204|# ──────────────────────────────────────────────────
    205|# Instructions:
    206|#   1. Copy this file to /data/config/hermes.env
@@ -340,20 +340,20 @@
    340|# ── Rebuild image ──────────────────────────────────────────────────────────────
    341|docker build \
    342|  --platform linux/amd64 \
-   343|  -t ghcr.io/fox-in-the-box-ai/cloud:dev \
+   343|  -t ghcr.io/claw-in-the-box-ai/cloud:dev \
    344|  -f packages/integration/Dockerfile .
    345|```bash
    346|# ── AC1: Fresh container creates correct /data structure ───────────────────────
    347|# Use a fresh, empty named volume (no prior /data state).
-   348|docker volume rm fitb-test-data 2>/dev/null || true
-   349|docker volume create fitb-test-data
+   348|docker volume rm citb-test-data 2>/dev/null || true
+   349|docker volume create citb-test-data
    350|
    351|docker run --rm \
    352|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    353|  --sysctl net.ipv4.ip_forward=1 \
-   354|  -v fitb-test-data:/data \
-   355|  ghcr.io/fox-in-the-box-ai/cloud:dev \
+   354|  -v citb-test-data:/data \
+   355|  ghcr.io/claw-in-the-box-ai/cloud:dev \
    356|  bash -c "
    357|    # Give supervisord 2 s to init, then inspect dirs and exit
    358|    sleep 2 && find /data -maxdepth 3 -type d | sort
@@ -373,15 +373,15 @@
    372|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    373|  --sysctl net.ipv4.ip_forward=1 \
-   374|  -v fitb-test-data:/data \
-   375|  ghcr.io/fox-in-the-box-ai/cloud:dev \
+   374|  -v citb-test-data:/data \
+   375|  ghcr.io/claw-in-the-box-ai/cloud:dev \
    376|  bash -c "sleep 2 && cat /data/config/onboarding.json"
    377|# Expected: {"completed": false}
    378|
    379|# ── AC3: Second run does NOT overwrite existing /data/config files ────────────
    380|# Write a sentinel value into an existing config file, then re-run the container.
    381|docker run --rm \
-   382|  -v fitb-test-data:/data \
+   382|  -v citb-test-data:/data \
    383|  busybox \
    384|  sh -c 'echo "SENTINEL=my_custom_value" >> /data/config/hermes.env'
    385|
@@ -389,61 +389,61 @@
    387|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    388|  --sysctl net.ipv4.ip_forward=1 \
-   389|  -v fitb-test-data:/data \
-   390|  ghcr.io/fox-in-the-box-ai/cloud:dev \
+   389|  -v citb-test-data:/data \
+   390|  ghcr.io/claw-in-the-box-ai/cloud:dev \
    391|  bash -c "sleep 2 && grep SENTINEL /data/config/hermes.env"
    392|# Expected: SENTINEL=my_custom_value  (file was NOT overwritten)
    393|
    394|# ── AC4: supervisord + all 4 programs RUNNING within 30 s ────────────────────
-   395|docker run -d --name fitb-ac4 \
+   395|docker run -d --name citb-ac4 \
    396|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    397|  --sysctl net.ipv4.ip_forward=1 \
-   398|  -v fitb-test-data:/data \
+   398|  -v citb-test-data:/data \
    399|  -p 127.0.0.1:8787:8787 \
-   400|  ghcr.io/fox-in-the-box-ai/cloud:dev
+   400|  ghcr.io/claw-in-the-box-ai/cloud:dev
    401|
    402|for i in $(seq 1 6); do
    403|  sleep 5
-   404|  STATUS=$(docker exec fitb-ac4 supervisorctl status 2>/dev/null || true)
+   404|  STATUS=$(docker exec citb-ac4 supervisorctl status 2>/dev/null || true)
    405|  echo "$STATUS"
    406|  RUNNING=$(echo "$STATUS" | grep -c "RUNNING" || true)
    407|  [ "$RUNNING" -ge 4 ] && echo "✅ All 4 programs RUNNING" && break
    408|  echo "... waiting ($((i*5))s elapsed)"
    409|done
    410|
-   411|docker rm -f fitb-ac4
+   411|docker rm -f citb-ac4
    412|
    413|# ── AC5: OPENROUTER_API_KEY from hermes.env is visible in child process env ───
    414|# Seed a hermes.env with the key.
    415|docker run --rm \
-   416|  -v fitb-test-data:/data \
+   416|  -v citb-test-data:/data \
    417|  busybox \
    418|  sh -c 'echo "OPENROUTER_API_KEY=***" > /data/config/hermes.env'
    419|
-   420|docker run -d --name fitb-ac5 \
+   420|docker run -d --name citb-ac5 \
    421|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    422|  --sysctl net.ipv4.ip_forward=1 \
-   423|  -v fitb-test-data:/data \
-   424|  ghcr.io/fox-in-the-box-ai/cloud:dev
+   423|  -v citb-test-data:/data \
+   424|  ghcr.io/claw-in-the-box-ai/cloud:dev
    425|
    426|sleep 5
    427|
    428|# Check env of the hermes-gateway child process
-   429|docker exec fitb-ac5 bash -c \
+   429|docker exec citb-ac5 bash -c \
    430|  'cat /proc/$(supervisorctl pid hermes-gateway)/environ | tr "\0" "\n" | grep OPENROUTER'
    431|# Expected: OPENROUTER_API_KEY=***
    432|
-   433|docker rm -f fitb-ac5
+   433|docker rm -f citb-ac5
    434|
    435|# ── AC6: git repos cloned into /data/apps/ ────────────────────────────────────
    436|docker run --rm \
    437|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    438|  --sysctl net.ipv4.ip_forward=1 \
-   439|  -v fitb-test-data:/data \
-   440|  ghcr.io/fox-in-the-box-ai/cloud:dev \
+   439|  -v citb-test-data:/data \
+   440|  ghcr.io/claw-in-the-box-ai/cloud:dev \
    441|  bash -c "
    442|    # Wait for entrypoint to finish cloning, then check .git dirs
    443|    sleep 30 && \
@@ -457,14 +457,14 @@
    451|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    452|  --sysctl net.ipv4.ip_forward=1 \
-   453|  -v fitb-test-data:/data \
-   454|  ghcr.io/fox-in-the-box-ai/cloud:dev \
+   453|  -v citb-test-data:/data \
+   454|  ghcr.io/claw-in-the-box-ai/cloud:dev \
    455|  bash -c "sleep 5 && grep 'skipping clone' /proc/1/fd/1 2>/dev/null || \
    456|    docker logs \$(hostname) 2>&1 | grep 'skipping clone'"
    457|# Expected: '[entrypoint] hermes-agent already present ... — skipping clone.'
    458|
    459|# ── Cleanup ───────────────────────────────────────────────────────────────────
-   460|docker volume rm fitb-test-data
+   460|docker volume rm citb-test-data
    461|```
    462|
    463|---

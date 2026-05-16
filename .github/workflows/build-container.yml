@@ -27,7 +27,7 @@ on:
         value: ${{ jobs.merge.outputs.digest }}
 
 env:
-  IMAGE: ghcr.io/fox-in-the-box-ai/cloud
+  IMAGE: ghcr.io/claw-in-the-box-ai/cloud
 
 jobs:
   # ── Build per platform, push by digest, export the digest as an artifact.
@@ -71,7 +71,7 @@ jobs:
           # main, PRs) carry a dev marker derived from the short SHA so the
           # in-app version display is never blank — previously these built
           # with FITB_VERSION="" which surfaced as empty version strings on
-          # :latest / :stable images. FITB#122 cosmetic.
+          # :latest / :stable images. CITB#122 cosmetic.
           if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
             echo "fitb_version=${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
           else
@@ -209,7 +209,7 @@ jobs:
       # auto-bumped from :latest on every push to main, which meant any
       # post-release commit (including docs-only PRs) shipped a build to
       # all DMG users via :stable without a release tag — surfaced by
-      # FITB#122 where :stable diverged from :v0.5.0 within hours of the
+      # CITB#122 where :stable diverged from :v0.5.0 within hours of the
       # release. :stable is now bumped exclusively by release.yml's
       # imagetools step (pinned to the wait-for-container index digest)
       # so it tracks released versions only. Do NOT restore this step.

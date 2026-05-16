@@ -4,7 +4,7 @@ Local development with bind-mounted submodules. Lets you iterate on `forks/herme
 
 ## When to use
 
-- Working on a feature branch in either submodule and want to run it inside the FITB container immediately
+- Working on a feature branch in either submodule and want to run it inside the CITB container immediately
 - Testing a bug-fix candidate before opening a PR
 - Reproducing a production issue against a known-good snapshot
 
@@ -19,7 +19,7 @@ pnpm build:docker:dev
 What this does:
 - Reads `VERSION` (repo root) — currently `0.5.0`
 - Builds with `--build-arg FITB_DEV=1`
-- Tags the image as `fox-in-the-box:dev`
+- Tags the image as `claw-in-the-box:dev`
 - Skips the `_clone_app hermes-agent` / `_clone_app hermes-webui` calls in `entrypoint.sh` — the container will use bind-mounted submodules instead
 
 ## Run with bind mounts
@@ -35,7 +35,7 @@ docker run -it --rm \
   -p 127.0.0.1:8787:8787 \
   -v $(pwd)/forks/hermes-agent:/root/.hermes/hermes-agent \
   -v $(pwd)/forks/hermes-webui:/root/.hermes/hermes-webui \
-  fox-in-the-box:dev
+  claw-in-the-box:dev
 ```
 
 Edit code in `forks/*` on your host. The container sees the changes immediately. After a Python change, restart the affected service from inside the container:
@@ -64,7 +64,7 @@ If a mount is missing:
 
 ## Prod vs Dev image differences
 
-| Aspect | `fox-in-the-box:dev` | `fox-in-the-box:<version>` (production) |
+| Aspect | `claw-in-the-box:dev` | `claw-in-the-box:<version>` (production) |
 |---|---|---|
 | Build flag | `FITB_DEV=1` | `FITB_DEV=0` (default) |
 | Submodule source | Bind-mounted from your host | Cloned from a git tag at build time |
@@ -100,11 +100,11 @@ When dev mode hides the bug, you need the actual built image. Build the producti
 
 ```bash
 docker build -f packages/integration/Dockerfile \
-  -t fitb:repro --build-arg FITB_VERSION=v0.5.0 .
+  -t citb:repro --build-arg FITB_VERSION=v0.5.0 .
 docker run --rm --cap-add=NET_ADMIN --device /dev/net/tun \
   --sysctl net.ipv4.ip_forward=1 \
   -p 127.0.0.1:8788:8787 \
-  -v fitb-repro-data:/data fitb:repro
+  -v citb-repro-data:/data citb:repro
 ```
 
 (Port 8788 not 8787 so it doesn't collide with your real install.)

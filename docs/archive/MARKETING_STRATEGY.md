@@ -1,4 +1,4 @@
-# Fox in the Box — Marketing Strategy
+# Claw in the Box — Marketing Strategy
 **Version**: 0.1 | **Last Updated**: May 1, 2026  
 **Status**: Live market research inputs integrated
 
@@ -8,7 +8,7 @@
 
 **REVISED STRATEGY: Developer-First, Non-Technical Second**
 
-Fox in the Box is **built for developers, adopted by business users**. This is how successful developer tools grow:
+Claw in the Box is **built for developers, adopted by business users**. This is how successful developer tools grow:
 1. Developers adopt → Stars, word-of-mouth, integrations
 2. Business users follow → Lower cost of customer acquisition
 
@@ -72,7 +72,7 @@ Fox in the Box is **built for developers, adopted by business users**. This is h
 |-----------|---------|---------|
 | **Memorability over precision** | Easy to remember > technically accurate | "AI that learns" vs "persistent vector embeddings with skill codification" |
 | **Non-technical clarity** | No jargon for general audience | "Remembers" not "maintains context window" |
-| **Lowercase UI, title-case marketing** | `fox in the box` (product) vs "Fox in the Box" (company/launch) | GitHub org: `fox-in-the-box-ai`, landing: "Fox in the Box" |
+| **Lowercase UI, title-case marketing** | `fox in the box` (product) vs "Claw in the Box" (company/launch) | GitHub org: `claw-in-the-box-ai`, landing: "Claw in the Box" |
 | **Show, don't explain** | Use video + screenshots > walls of text | 60-second demo beats 5-min tutorial |
 | **Action-oriented** | Focus on outcome not technology | "Automate your Slack workflow" not "deploy multi-agent orchestration" |
 
@@ -220,7 +220,7 @@ Fox in the Box is **built for developers, adopted by business users**. This is h
 ### Channel 6: Partnerships
 **Goal**: Co-marketing, bundled value  
 **Initial targets**:
-- **Tailscale** — "Run Fox securely over VPN" (they ship with FITB)
+- **Tailscale** — "Run Fox securely over VPN" (they ship with CITB)
 - **Ollama** — "Run local LLMs with Fox agents"
 - **Retool** — "Connect Retool workflows to Fox agents"
 - **Fly.io** — "Self-host Fox on Fly for $5/month"

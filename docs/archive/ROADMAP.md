@@ -1,4 +1,4 @@
-# Fox in the Box — Roadmap
+# Claw in the Box — Roadmap
 
 **Last updated:** April 28, 2026
 
@@ -35,8 +35,8 @@ Goal: working product across all three platforms, clean onboarding, polished UX.
 ### Sprint Plan
 
 #### Day 1 — Monorepo + Container skeleton
-- [ ] Create GitHub forks: `fox-in-the-box-ai/hermes-agent`, `fox-in-the-box-ai/hermes-webui`
-- [ ] Set up monorepo `fox-in-the-box` with pnpm workspaces:
+- [ ] Create GitHub forks: `smelicit1-debug/hermes-agent`, `smelicit1-debug/hermes-webui`
+- [ ] Set up monorepo `claw-in-the-box` with pnpm workspaces:
   - `packages/integration/` — Dockerfile, supervisord.conf, entrypoint.sh, default-configs
   - `packages/electron/` — Electron desktop app
   - `packages/scripts/` — install.sh (Linux + macOS), dev utilities
@@ -71,7 +71,7 @@ Goal: working product across all three platforms, clean onboarding, polished UX.
   - Print access URL
 
 #### Day 4 — CI/CD + polish
-- [ ] GitHub Actions: `build-container.yml` — build + push to `ghcr.io/fox-in-the-box-ai/cloud:latest` on push to main
+- [ ] GitHub Actions: `build-container.yml` — build + push to `ghcr.io/claw-in-the-box-ai/cloud:latest` on push to main
 - [ ] GitHub Actions: `build-electron.yml` — build Windows `.exe`, attach to GitHub Release (macOS: `install.sh`, not a release artifact)
 - [ ] UX pass on onboarding wizard (look + feel, error states, loading indicators)
 - [ ] README quickstart (30-second install instructions for all three platforms)

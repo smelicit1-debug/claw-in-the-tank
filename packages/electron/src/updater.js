@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * updater.js — electron-updater integration for Fox in the Box
+ * updater.js — electron-updater integration for Claw in the Box
  *
  * Responsibilities:
  *  - Check GitHub Releases for a newer version on startup (after a short delay)
@@ -142,7 +142,7 @@ async function checkForUpdatesManual() {
       _checking = false;
       dialog.showMessageBox({
         type: 'info',
-        title: 'Fox in the box',
+        title: 'Claw in the Box',
         message: 'You are running the latest version.',
       });
     }

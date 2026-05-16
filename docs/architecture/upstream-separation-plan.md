@@ -3,7 +3,7 @@
 **Status:** RESEARCH COMPLETE / AWAITING DECISION
 **Date:** 2026-05-08
 **Author:** Architecture research dispatched by Dennis Vorobyov (@roadhero)
-**Scope:** Separate Fox in the Box customizations from upstream `NousResearch/hermes-agent` and `nesquena/hermes-webui`
+**Scope:** Separate Claw in the Box customizations from upstream `NousResearch/hermes-agent` and `nesquena/hermes-webui`
 
 ---
 
@@ -68,7 +68,7 @@ packages/fox-overlay/
 │   ├── webui_routes.py                     # dispatch table called by routes.py patch
 │   └── webui_patches/{streaming,session_safety,config,providers}.py  # monkey-patches
 ├── webui_static/                            # mounted via HERMES_WEBUI_EXTENSION_DIR
-│   ├── fox-in-the-box.css, fox-overlay.js
+│   ├── claw-in-the-box.css, fox-overlay.js
 │   ├── setup.{html,js,css}
 │   ├── fonts/, icons/, images/
 │   └── ...
@@ -94,7 +94,7 @@ RUN cd /app/hermes-webui && xargs -r -a /app/fox-overlay/.fox-removals rm -f --
 RUN pip install -e /app/hermes-webui /app/fox-overlay
 ENV HERMES_WEBUI_EXTENSION_DIR=/app/fox-overlay/webui_static \
     HERMES_WEBUI_EXTENSION_SCRIPT_URLS=/extensions/fox-overlay.js \
-    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/fox-in-the-box.css
+    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/claw-in-the-box.css
 ```
 
 ## Things to retire / drop during migration
@@ -113,7 +113,7 @@ The upstream-state report flagged Fox features that already shipped upstream —
 
 - **`scripts/apply-local-patches.sh` + `_ensure_active_branch()`** in webui's `server.py` — both become dead code in the new model. Delete in the migration.
 
-- **Fox's `local-patches` branch** in `fox-in-the-box-ai/hermes-webui` — stale (34 commits behind master). Not revivable; delete or repurpose as patch archive.
+- **Fox's `local-patches` branch** in `smelicit1-debug/hermes-webui` — stale (34 commits behind master). Not revivable; delete or repurpose as patch archive.
 
 ## New upstream hooks Fox should adopt
 
@@ -184,7 +184,7 @@ Each one upstream accepts = one less commit in our patch series forever.
 
 ## Executive summary
 
-Recommended approach: **patch-series-on-top-of-upstream**, implemented as a long-lived `fitb` branch on each fork that we keep cleanly rebased onto `upstream/main` (agent) and `upstream/master` (webui). Submodule pointers in the monorepo move from `master`/`main` to `fitb`. The Dockerfile and CI keep working unchanged because they `COPY forks/hermes-*` — the branch name is opaque to the build.
+Recommended approach: **patch-series-on-top-of-upstream**, implemented as a long-lived `citb` branch on each fork that we keep cleanly rebased onto `upstream/main` (agent) and `upstream/master` (webui). Submodule pointers in the monorepo move from `master`/`main` to `citb`. The Dockerfile and CI keep working unchanged because they `COPY forks/hermes-*` — the branch name is opaque to the build.
 
 Why this and not subtree/submodule-of-upstream: the audit shows the actual patch surface is small enough to manage as a series. **hermes-agent has only 5 MODIFIED files / 0 DELETED**, and **hermes-webui has 29 MODIFIED / 7 DELETED**. Most of our work (22 of webui's 58 changed files, 4 of agent's 9) is already in NEW Fox-only files that conflict with nothing. A patch series turns "every pull is a merge nightmare" into "every pull is a 36-commit rebase, of which only ~12 commits touch upstream lines and might need touch-ups." Subtree adds a layer of indirection without solving the conflict on `static/index.html` or `api/routes.py`. A submodule-of-upstream + overlay copy-on-build would solve conflicts but bans us from ever touching upstream files at all, which the audit shows is unrealistic — onboarding, streaming, routes, server.py and config.py are co-modified by Fox features and upstream evolution.
 
@@ -197,7 +197,7 @@ Audit method: `git merge-base <fork-pin> upstream/<branch>`, then `git diff --na
 - `forks/hermes-agent` → `44a6808f` (on `main`, merge-base `e5dad4ac` — only 6 commits ahead of upstream)
 - `forks/hermes-webui` → `62c0854` (on `master`, merge-base `9e31a2ac` — 56 linear commits ahead of upstream, **no merge commits**)
 
-**Note on actual Fox patch surface for webui:** the heavy "Fox-only" branches (e.g. `feat/wizard-option-b-flow`, `local-patches`, the fix/* and feat/* branches listed earlier) are not what's deployed. The deployed pin is `master`, and `master`'s 56 linear commits include all the Fox features. So the audit numbers below ARE the live patch surface.
+**Note on actual Fox patch surface for webui:** the heavy "Fox-only" branches (e.g. `feat/wizard-option-b-flow`, `local-patches`, the fix/* and feat/* branches listed earlier) are not what's deployed. The deployed pin is `master`, and `master`'s 56 linear commits include all the Claw features. So the audit numbers below ARE the live patch surface.
 
 ### hermes-agent (pin `44a6808f` vs `upstream/main`)
 
@@ -227,9 +227,9 @@ Audit method: `git merge-base <fork-pin> upstream/<branch>`, then `git diff --na
 | `api/tailscale.py` | NEW | +877 / 0 | Tailscale phase-1+2 endpoints (#96) |
 | `scripts/apply-local-patches.sh` | NEW | +63 / 0 | local-patches rebase tool (already a patch-series scaffold) |
 | `static/setup.css` `setup.html` `setup.js` | NEW | +939 / 0 | Onboarding wizard UI (Fox-specific) |
-| `static/fox-in-the-box.{css,js}` | NEW | +1011 / 0 | Fox visual shell + variable fonts |
+| `static/claw-in-the-box.{css,js}` | NEW | +1011 / 0 | Fox visual shell + variable fonts |
 | `static/onboarding-preview.js` | NEW | +616 / 0 | Replacement preview for upstream onboarding |
-| `static/fallback-polish.js` | NEW | +527 / 0 | Failover modal UI (FITB#128/129c+d) |
+| `static/fallback-polish.js` | NEW | +527 / 0 | Failover modal UI (CITB#128/129c+d) |
 | `static/hostname-prompt.js` | NEW | +145 / 0 | Hostname prompt UI |
 | `static/fonts/*`, `static/fox_avatar_cropped.jpg`, `apple-touch-icon.png`, favicons (5) | NEW/MODIFIED (binary) | n/a | Fox branding assets |
 | `tests/test_local_patches_update_flow.py` | NEW | +77 / 0 | Test for #1 |
@@ -242,7 +242,7 @@ Audit method: `git merge-base <fork-pin> upstream/<branch>`, then `git diff --na
 | `api/config.py` | MODIFIED | +118 / −6 | Tailscale + fallback + Ollama URL config keys |
 | `api/models.py` | MODIFIED | +58 / −1 | P0 #1558 metadata-save fix + project_id propagation |
 | `api/providers.py` | MODIFIED | +29 / 0 | Hot-reload gateway after key change |
-| `api/updates.py` | MODIFIED | +163 / −42 | Track fitb-ai fork remote; auto-reapply local patches |
+| `api/updates.py` | MODIFIED | +163 / −42 | Track citb-ai fork remote; auto-reapply local patches |
 | `server.py` | MODIFIED | +95 / 0 | `_ensure_active_branch()` startup git checkout + onboarding redirect import |
 | `.env.example`, `.env.docker.example` | MODIFIED | +7 / 0 | Document Fox env vars |
 | `ARCHITECTURE.md` | MODIFIED | +1 / −2 | Note Fox fork |
@@ -290,24 +290,24 @@ Audit method: `git merge-base <fork-pin> upstream/<branch>`, then `git diff --na
 ```
 # In /Users/macpro/Desktop/Fox-In-the-Box/hermes-webui (standalone clone)
 git fetch origin upstream
-git checkout -b fitb origin/master            # 56 commits ahead of upstream
-git log --merges $(git merge-base fitb upstream/master)..fitb   # should print nothing
-git push -u origin fitb
+git checkout -b citb origin/master            # 56 commits ahead of upstream
+git log --merges $(git merge-base citb upstream/master)..citb   # should print nothing
+git push -u origin citb
 # In monorepo: re-pin submodule
 cd /Users/macpro/Desktop/Fox-In-the-Box/project
 git -C forks/hermes-webui fetch origin
-git -C forks/hermes-webui checkout fitb
-git add forks/hermes-webui && git commit -m "chore: pin webui submodule to fitb branch"
-# Update .gitmodules: branch = fitb
+git -C forks/hermes-webui checkout citb
+git add forks/hermes-webui && git commit -m "chore: pin webui submodule to citb branch"
+# Update .gitmodules: branch = citb
 ```
 
 **Ongoing pull (per upstream release, ~weekly):**
 ```
 git fetch upstream
-git tag pre-pull-$(date +%Y%m%d) fitb        # rollback anchor
+git tag pre-pull-$(date +%Y%m%d) citb        # rollback anchor
 git rebase upstream/master                   # replay 56 commits onto new base
 # resolve conflicts (typically 0–4 files)
-git push --force-with-lease origin fitb
+git push --force-with-lease origin citb
 ```
 
 **Conflict surface per pull:** the 6 always-conflict files in webui plus the 7 DELETED files. Empirically: 5–15 minutes of conflict resolution per upstream release.
@@ -322,22 +322,22 @@ Shifts the conflict from `git pull` time to `git apply` time — same 36-file co
 
 ## Recommended migration plan (git-level only)
 
-The existing `local-patches` branch on webui is stale. We should not revive it; we should formalize `master` itself as the patch series, rename it `fitb`, and fix the workflow so it stays clean.
+The existing `local-patches` branch on webui is stale. We should not revive it; we should formalize `master` itself as the patch series, rename it `citb`, and fix the workflow so it stays clean.
 
-**Step 1: Audit & tag.** In `hermes-webui` standalone clone: `git tag fitb-snapshot-2026-05-08 origin/master` and push the tag. Same for `hermes-agent`.
+**Step 1: Audit & tag.** In `hermes-webui` standalone clone: `git tag citb-snapshot-2026-05-08 origin/master` and push the tag. Same for `hermes-agent`.
 
-**Step 2: Create the `fitb` branch.** `git checkout -b fitb origin/master` in each fork; `git push -u origin fitb`.
+**Step 2: Create the `citb` branch.** `git checkout -b citb origin/master` in each fork; `git push -u origin citb`.
 
-**Step 3: Repoint submodules.** Edit `.gitmodules` so `branch = fitb` for both fork submodules.
+**Step 3: Repoint submodules.** Edit `.gitmodules` so `branch = citb` for both fork submodules.
 
-**Step 4: Branch protect both forks' `fitb` and `master`/`main`.**
+**Step 4: Branch protect both forks' `citb` and `master`/`main`.**
 
 **Step 5: First pull-from-upstream dry run** (1–2 hours, webui only).
 
 **Step 6: Document the workflow.**
 
 **Hard cases — files we MUST patch (cannot move to overlay):**
-- `api/routes.py` — keep all Fox endpoint registration in a single contiguous block at the bottom of the file, marked with `# === FITB ===` fences.
+- `api/routes.py` — keep all Fox endpoint registration in a single contiguous block at the bottom of the file, marked with `# === CITB ===` fences.
 - `api/onboarding.py` — explicitly mark this commit "REPLACE upstream onboarding" and use `-Xtheirs` for that one commit during rebase.
 - `static/index.html`, `static/panels.js` — frontend equivalent of `routes.py`. Same fence-comment mitigation.
 
@@ -345,9 +345,9 @@ The existing `local-patches` branch on webui is stale. We should not revive it; 
 
 **R1: Submodule pointer mismatch breaks the Docker build.** Mitigation: Step 3 includes a CI build verification before merging the PR.
 
-**R2: First rebase produces a silently-wrong merge.** Mitigation: Step 5 includes manual smoke tests; pin a "canary" deploy slot before promoting `fitb` rebases to the main monorepo.
+**R2: First rebase produces a silently-wrong merge.** Mitigation: Step 5 includes manual smoke tests; pin a "canary" deploy slot before promoting `citb` rebases to the main monorepo.
 
-**R3: Force-push to `fitb` clobbers in-flight feature branches.** Mitigation: announce rebase windows.
+**R3: Force-push to `citb` clobbers in-flight feature branches.** Mitigation: announce rebase windows.
 
 **R4: 7 DELETED files come back every pull.** Mitigation: a tiny `.git/hooks/post-rewrite` (or a CI check) that runs `git rm` on a hardcoded list.
 
@@ -528,9 +528,9 @@ Sources: [docs.openwebui.com/features/extensibility/plugin/](https://docs.openwe
 
 ## Executive Summary
 
-The current container build (`packages/integration/Dockerfile`) bakes the Fox fork directly into the image via `COPY forks/hermes-agent /app/hermes-agent` and `COPY forks/hermes-webui /app/hermes-webui`. Because both submodules point at the Fox fork's default branch (with edits applied directly to upstream files), each upstream pull triggers the conflict storm.
+The current container build (`packages/integration/Dockerfile`) bakes the Claw fork directly into the image via `COPY forks/hermes-agent /app/hermes-agent` and `COPY forks/hermes-webui /app/hermes-webui`. Because both submodules point at the Claw fork's default branch (with edits applied directly to upstream files), each upstream pull triggers the conflict storm.
 
-**Recommended architecture: Submodule-pinned-to-upstream-tag + sibling `packages/fox-overlay/{webui,agent}` + multi-stage Docker COPY.** The Dockerfile clones the virgin upstream into `/app/hermes-webui`, then a second `COPY` lays the Fox overlay on top. Files we own outright live in the overlay and shadow upstream cleanly. The remaining ~6 mid-file patches in `hermes-webui` and ~5 in `hermes-agent` become a **patch series** maintained by Agent 1 and applied via `git apply` in a build stage between the upstream copy and the overlay copy.
+**Recommended architecture: Submodule-pinned-to-upstream-tag + sibling `packages/fox-overlay/{webui,agent}` + multi-stage Docker COPY.** The Dockerfile clones the virgin upstream into `/app/hermes-webui`, then a second `COPY` lays the Claw overlay on top. Files we own outright live in the overlay and shadow upstream cleanly. The remaining ~6 mid-file patches in `hermes-webui` and ~5 in `hermes-agent` become a **patch series** maintained by Agent 1 and applied via `git apply` in a build stage between the upstream copy and the overlay copy.
 
 The single load-bearing tradeoff: this approach pushes complexity to upstream **bumps** (re-resolve patches against new upstream tag) instead of paying it on every developer rebase. The bet is that bumps are intentional, scheduled events while rebases happen continuously. A **pre-build "overlay basis check"** detects upstream renames/deletions before they silently swallow Fox features.
 
@@ -545,7 +545,7 @@ RUN pip install -e /app/hermes-agent && \
     (pip install -e /app/hermes-webui || pip install -r /app/hermes-webui/requirements.txt)
 ```
 
-The `forks/` paths are submodules pointing at the Fox fork. CI uses `actions/checkout@v4` with `submodules: recursive`. Everything below line 139 — entrypoint, supervisord, qdrant/llama-cpp tarballs, ENV/VOLUME/EXPOSE — is independent of this change and stays as-is. The `release.yml` / signing / notarization flow is **completely insulated** from this restructure.
+The `forks/` paths are submodules pointing at the Claw fork. CI uses `actions/checkout@v4` with `submodules: recursive`. Everything below line 139 — entrypoint, supervisord, qdrant/llama-cpp tarballs, ENV/VOLUME/EXPOSE — is independent of this change and stays as-is. The `release.yml` / signing / notarization flow is **completely insulated** from this restructure.
 
 ## The Three Build-Time Approaches
 
@@ -589,7 +589,7 @@ ENTRYPOINT ["/app/apply-overlay.sh", "/app/entrypoint.sh"]
 
 ```dockerfile
 # forks/hermes-webui submodule now points at github.com/nesquena/hermes-webui
-# pinned to a tag (e.g. v0.51.22). NOT the Fox fork.
+# pinned to a tag (e.g. v0.51.22). NOT the Claw fork.
 COPY forks/hermes-webui /app/hermes-webui
 
 # Apply curated mid-file patches.
@@ -763,7 +763,7 @@ Both upstreams are unambiguously **worth tracking** — the velocity is too high
 - **`NemoClaw`**, **`OpenShell-Community`** — sandbox runtime for autonomous agents.
 - **No repos suggest hermes-agent is being rewritten or absorbed**. The org's posture is to invest in `hermes-agent` as the flagship and add adapters/applications around it.
 
-## Implications for the Fox separation architecture
+## Implications for the Claw separation architecture
 
 - **Cadence reality check**: 1,236 agent commits + 953 webui commits in the **last 30 days** = ~73 upstream commits per day across both. Even a weekly Fox rebase would face ~500 commits worth of conflict surface. A patch-series-on-tag-only strategy (only re-baselining when upstream tags a release) is the only sustainable model.
 - **Drop-in opportunities (Fox commits to retire)**:

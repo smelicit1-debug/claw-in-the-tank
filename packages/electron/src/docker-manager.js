@@ -6,8 +6,8 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 
-const IMAGE  = 'ghcr.io/fox-in-the-box-ai/cloud:stable';
-const CNAME  = 'fox-in-the-box';
+const IMAGE  = 'ghcr.io/claw-in-the-box-ai/cloud:stable';
+const CNAME  = 'claw-in-the-box';
 const PORT   = '8787/tcp';
 const ACCESS_MODE_FILE = 'docker-access-mode.json';
 
@@ -229,7 +229,7 @@ async function getContainerByName({ all = false } = {}) {
 }
 
 /**
- * Start the Fox container. Assumes image is already present.
+ * Start the Claw container. Assumes image is already present.
  * Returns the container object.
  */
 async function startContainer() {
@@ -301,13 +301,13 @@ async function ensureDockerAccessModeChosen() {
   const { dialog } = require('electron');
   const { response } = await dialog.showMessageBox({
     type: 'question',
-    title: 'Fox in the box — Network access',
+    title: 'Claw in the Box — Network access',
     message: 'How should this PC reach the container?',
     detail:
       'Port only: bind 8787 on all interfaces (localhost + LAN if firewall allows).\n'
       + 'Tailscale only: localhost 8787 on this PC + Tailscale inside the container (recommended).\n'
       + 'Both: LAN port 8787 and Tailscale.\n\n'
-      + 'To change later, remove the fox-in-the-box container in Docker Desktop and relaunch the app.',
+      + 'To change later, remove the claw-in-the-box container in Docker Desktop and relaunch the app.',
     buttons: ['Port only', 'Tailscale only', 'Both', 'Cancel'],
     defaultId: 1,
     cancelId: 3,

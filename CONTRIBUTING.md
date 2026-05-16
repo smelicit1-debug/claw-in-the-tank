@@ -1,4 +1,4 @@
-# Contributing to Fox in the Box
+# Contributing to Claw in the Box
 
 Thank you for your interest in contributing. This document explains how to get involved.
 
@@ -8,12 +8,12 @@ Thank you for your interest in contributing. This document explains how to get i
 
 ### Reporting bugs
 
-Search [existing issues](https://github.com/fox-in-the-box-ai/fox-in-the-box/issues) before opening a new one. If you find a match, add any additional information as a comment rather than opening a duplicate.
+Search [existing issues](https://github.com/smelicit1-debug/claw-in-the-box/issues) before opening a new one. If you find a match, add any additional information as a comment rather than opening a duplicate.
 
 When opening a bug report, use the bug report template and include:
 - steps to reproduce the problem
-- your OS, installation method, and Fox in the Box version
-- relevant log output (`docker logs fox-in-the-box`)
+- your OS, installation method, and Claw in the Box version
+- relevant log output (`docker logs claw-in-the-box`)
 
 ### Requesting features
 
@@ -42,20 +42,20 @@ When your PR is ready:
 ### Clone and build
 
 ```bash
-git clone --recurse-submodules https://github.com/fox-in-the-box-ai/fox-in-the-box.git
-cd fox-in-the-box
+git clone --recurse-submodules https://github.com/smelicit1-debug/claw-in-the-box.git
+cd claw-in-the-box
 
 # Build the Docker image
-docker build -f packages/integration/Dockerfile -t fitb:local .
+docker build -f packages/integration/Dockerfile -t citb:local .
 
 # Run locally
 docker run -d \
-  --name fox-in-the-box \
+  --name claw-in-the-box \
   --cap-add=NET_ADMIN \
   --device /dev/net/tun \
   -p 8787:8787 \
   -v ~/.foxinthebox:/data \
-  fitb:local
+  citb:local
 ```
 
 Open [http://localhost:8787](http://localhost:8787) and complete the setup wizard.

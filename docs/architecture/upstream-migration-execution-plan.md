@@ -14,7 +14,7 @@ The 2026-05-08 research synthesis recommended a **hybrid** end state: re-point t
 
 This plan operationalizes that recommendation as a **10-phase migration** (one phase split out of the original 9 to honor anti-regression Rule 1: "one big change per release"). Total effort is **~14 engineering days** over a **~5-week calendar window** including the mandatory 48-hour soak after every tag bump that exposes user-facing change. Each phase produces a green Docker container and an individually revertible PR.
 
-The single highest-value early action is **Phase 0 (Upstream-PR campaign)**: send the 5 bug-fix-class FITB commits to NousResearch and nesquena. Each accepted PR shrinks the patch series forever, and three of the five (`runtime_provider.py`, `auxiliary_client.py`, `models.py` #1558) are textbook upstream candidates.
+The single highest-value early action is **Phase 0 (Upstream-PR campaign)**: send the 5 bug-fix-class CITB commits to NousResearch and nesquena. Each accepted PR shrinks the patch series forever, and three of the five (`runtime_provider.py`, `auxiliary_client.py`, `models.py` #1558) are textbook upstream candidates.
 
 The work is reversible at every phase. The only point-of-no-return is Phase 7 (submodule re-point), and even that is one `git revert` away from rollback because the submodule pointer is just a SHA in the parent repo.
 
@@ -65,7 +65,7 @@ Do NOT start Phase 1 until **all** of the following are true.
 
 - [ ] `main` is at v0.5.4 stable; no in-flight feature branches blocking on shared files (`api/routes.py`, `static/index.html`, `static/panels.js`, `api/streaming.py`, `api/onboarding.py`, `api/config.py`).
 - [ ] All v0.5.4 follow-on stabilization issues (#138/#139/#140) closed; smoke checklist Section L row for v0.5.4 passes against `:stable`.
-- [ ] No open PR on the fox-in-the-box-ai/hermes-{webui,agent} forks awaiting merge — they will be invalidated by the submodule re-point.
+- [ ] No open PR on the claw-in-the-box-ai/hermes-{webui,agent} forks awaiting merge — they will be invalidated by the submodule re-point.
 - [ ] `.github/workflows/sync-submodules.yml` is **paused** (workflow_dispatch only, no `repository_dispatch`) for the duration of the migration. Auto-bumping mid-migration would whipsaw the pin.
 
 ### Roadmap preconditions
@@ -85,7 +85,7 @@ Do NOT start Phase 1 until **all** of the following are true.
 
 - [ ] Verification container pattern from `reference_test_container.md` works cleanly on Apple Silicon and an x86_64 host. Both required to catch architecture regressions like #114.
 - [ ] Standalone clones at `~/Documents/Fox-In-the-Box/hermes-{agent,webui}` have `upstream` remote configured with `push = DISABLED` (verified — they do).
-- [ ] Branch protection rules on `fox-in-the-box-ai/hermes-{webui,agent}` are confirmed not to block the planned `fitb-overlay-archive` tag push (Phase 7 step 7.3).
+- [ ] Branch protection rules on `claw-in-the-box-ai/hermes-{webui,agent}` are confirmed not to block the planned `citb-overlay-archive` tag push (Phase 7 step 7.3).
 
 If any box is unchecked, do not proceed. Document the blocker in the issue tracker.
 
@@ -109,13 +109,13 @@ Targets (in priority order — bug fixes first, new behavior last):
 
 | # | Source path | Upstream | Branch | One-line scope |
 |---|---|---|---|---|
-| 1 | `hermes_cli/runtime_provider.py` | NousResearch/hermes-agent | `fitb/fix-target-model-bedrock` | One-line `target_model` fix for Bedrock api_mode routing |
-| 2 | `api/models.py` (#1558) | nesquena/hermes-webui | `fitb/fix-1558-metadata-save` | P0 metadata-only Session.save guard (data-loss class) |
-| 3 | `agent/auxiliary_client.py` | NousResearch/hermes-agent | `fitb/fix-provider-auto-fallback` | `provider=auto` resolution + `auxiliary.default` fallback |
-| 4 | `cron/{jobs,scheduler}.py` + `tools/cronjob_tools.py` | NousResearch/hermes-agent | `fitb/feat-cron-failure-diagnostics` | Rolling-5 failure history + diagnostics fields |
-| 5 | `api/providers.py` | nesquena/hermes-webui | `fitb/fix-providers-hot-reload` | Gateway hot-reload after key change |
+| 1 | `hermes_cli/runtime_provider.py` | NousResearch/hermes-agent | `citb/fix-target-model-bedrock` | One-line `target_model` fix for Bedrock api_mode routing |
+| 2 | `api/models.py` (#1558) | nesquena/hermes-webui | `citb/fix-1558-metadata-save` | P0 metadata-only Session.save guard (data-loss class) |
+| 3 | `agent/auxiliary_client.py` | NousResearch/hermes-agent | `citb/fix-provider-auto-fallback` | `provider=auto` resolution + `auxiliary.default` fallback |
+| 4 | `cron/{jobs,scheduler}.py` + `tools/cronjob_tools.py` | NousResearch/hermes-agent | `citb/feat-cron-failure-diagnostics` | Rolling-5 failure history + diagnostics fields |
+| 5 | `api/providers.py` | nesquena/hermes-webui | `citb/fix-providers-hot-reload` | Gateway hot-reload after key change |
 
-**Validation gates.** Each upstream PR must (a) include unit tests if the file has tests, (b) declare `Upstream-Status: Submitted <PR-URL>` in the corresponding Fox commit message in the standalone clone, (c) reference the FITB issue if any.
+**Validation gates.** Each upstream PR must (a) include unit tests if the file has tests, (b) declare `Upstream-Status: Submitted <PR-URL>` in the corresponding Fox commit message in the standalone clone, (c) reference the CITB issue if any.
 
 **Rollback.** N/A — these are upstream PRs. If rejected, the patch stays in Fox's series; no monorepo state changes.
 
@@ -171,7 +171,7 @@ packages/fox-overlay/
 [project]
 name = "fox-overlay"
 version = "0.0.1"
-description = "Fox in the Box overlay for hermes-agent and hermes-webui"
+description = "Claw in the Box overlay for hermes-agent and hermes-webui"
 requires-python = ">=3.11"
 dependencies = []
 
@@ -245,8 +245,8 @@ install()
 Move (preserving git history with `git mv`):
 
 ```
-forks/hermes-webui/static/fox-in-the-box.css   → packages/fox-overlay/webui_static/fox-in-the-box.css
-forks/hermes-webui/static/fox-in-the-box.js    → packages/fox-overlay/webui_static/fox-overlay.js
+forks/hermes-webui/static/claw-in-the-box.css   → packages/fox-overlay/webui_static/claw-in-the-box.css
+forks/hermes-webui/static/claw-in-the-box.js    → packages/fox-overlay/webui_static/fox-overlay.js
 forks/hermes-webui/static/fox_avatar_cropped.jpg → packages/fox-overlay/webui_static/images/fox_avatar_cropped.jpg
 forks/hermes-webui/static/fonts/*              → packages/fox-overlay/webui_static/fonts/
 forks/hermes-webui/static/setup.html           → packages/fox-overlay/webui_static/setup.html
@@ -264,7 +264,7 @@ Append to `packages/fox-overlay/MANIFEST.toml`:
 
 ```toml
 [static]
-fox-in-the-box.css   = "fox-only"
+claw-in-the-box.css   = "fox-only"
 fox-overlay.js       = "fox-only"
 setup.html           = "fox-only"
 setup.css            = "fox-only"
@@ -291,17 +291,17 @@ Edit `packages/integration/Dockerfile` — insert immediately after the existing
 COPY packages/fox-overlay/webui_static /app/fox-overlay/webui_static
 ENV HERMES_WEBUI_EXTENSION_DIR=/app/fox-overlay/webui_static \
     HERMES_WEBUI_EXTENSION_SCRIPT_URLS=/extensions/fox-overlay.js \
-    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/fox-in-the-box.css
+    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/claw-in-the-box.css
 ```
 
-Edit `forks/hermes-webui/static/index.html` (in the standalone fork): remove the explicit `<link>` to `fox-in-the-box.css` and the explicit `<script>` for `fox-in-the-box.js` — the `extensions.py` injector will now provide them.
+Edit `forks/hermes-webui/static/index.html` (in the standalone fork): remove the explicit `<link>` to `claw-in-the-box.css` and the explicit `<script>` for `claw-in-the-box.js` — the `extensions.py` injector will now provide them.
 
 **Validation gates.**
 - Smoke checklist Section A (container health) all green.
 - Section B (onboarding wizard B1–B9) all green — the wizard is the highest-risk asset because it's served from `setup.html`.
 - Section C (settings persistence) green — fonts/CSS unaffected.
-- View-source comparison: `curl http://127.0.0.1:8788/` before vs after must contain (a) the `<link rel="stylesheet" href="/extensions/fox-in-the-box.css">` injection, (b) the `<script defer src="/extensions/fox-overlay.js">` injection, (c) all other markup byte-identical except those two diffs.
-- HTTP status 200 on `/extensions/fox-in-the-box.css`, `/extensions/fox-overlay.js`, `/extensions/setup.html`, `/extensions/setup.js`, `/extensions/setup.css`, all font files.
+- View-source comparison: `curl http://127.0.0.1:8788/` before vs after must contain (a) the `<link rel="stylesheet" href="/extensions/claw-in-the-box.css">` injection, (b) the `<script defer src="/extensions/fox-overlay.js">` injection, (c) all other markup byte-identical except those two diffs.
+- HTTP status 200 on `/extensions/claw-in-the-box.css`, `/extensions/fox-overlay.js`, `/extensions/setup.html`, `/extensions/setup.js`, `/extensions/setup.css`, all font files.
 - File checksums (sha256) of every moved asset match before vs. after.
 
 **Rollback.** Two-step revert: (a) revert monorepo PR (drops the COPY + ENV vars and the .fox-removals append); (b) revert hermes-webui fork PR (restores `static/*` files). Both are clean reverts. Submodule pointer rolls back automatically when the monorepo PR is reverted.
@@ -313,7 +313,7 @@ Edit `forks/hermes-webui/static/index.html` (in the standalone fork): remove the
 - Monorepo PR: "phase 2b: serve Fox static via overlay extension dir; bump hermes-webui submodule"
 
 **Risks.**
-- Some upstream code (e.g. `static/index.html` or `boot.js`) hard-references one of the moved file paths (e.g. `/static/fox-in-the-box.css` literal). **Mitigation:** `grep -r "fox-in-the-box\|fox_avatar\|setup.html\|setup.js" forks/hermes-webui/` before moving; rewrite or proxy.
+- Some upstream code (e.g. `static/index.html` or `boot.js`) hard-references one of the moved file paths (e.g. `/static/claw-in-the-box.css` literal). **Mitigation:** `grep -r "claw-in-the-box\|fox_avatar\|setup.html\|setup.js" forks/hermes-webui/` before moving; rewrite or proxy.
 - Service worker (`sw.js`) caches the old paths. **Mitigation:** the smoke checklist mandates `sw.js` cache disable verification (Section A2). Bump the SW version string in the overlay JS to invalidate.
 - Font MIME types not in `extensions.py`'s `_EXTENSION_MIME` map. **Mitigation:** verify `_EXTENSION_MIME` covers `woff`, `woff2`, `ttf`, `otf`; if not, this becomes a 1-line upstream PR (Phase 0 candidate #6) OR a one-line monkey-patch in the bootstrap shim.
 - Cap of 32 URLs per env var (per `extensions.py`). Fox's overlay JS/CSS is comma-separated; comma-joining stays under cap.
@@ -410,7 +410,7 @@ def apply():
         "[fox-overlay] patched hermes_cli.runtime_provider.resolve_runtime_provider")
 ```
 
-In hermes-agent fork (standalone clone), branch `fitb/phase3-restore-upstream`:
+In hermes-agent fork (standalone clone), branch `citb/phase3-restore-upstream`:
 - Delete the 5 modified-file Fox edits (`hermes_cli/runtime_provider.py`, `agent/auxiliary_client.py`, `cron/jobs.py`, `cron/scheduler.py`, `tools/cronjob_tools.py`) — restore upstream content.
 - Delete `plugins/memory/mem0_oss/` — relocated.
 - Keep `.github/workflows/notify-monorepo.yml` as-is (Fox-side CI).
@@ -546,7 +546,7 @@ RUN cd /app/hermes-webui \
 
 (NOTE: `git apply` requires `git` in the image — already installed.)
 
-In hermes-webui standalone fork, on a `fitb/phase4-restore-upstream-server-routes` branch: revert the existing Fox edits to `server.py` and `api/routes.py`. The patches in monorepo are now the source of truth for those edits.
+In hermes-webui standalone fork, on a `citb/phase4-restore-upstream-server-routes` branch: revert the existing Fox edits to `server.py` and `api/routes.py`. The patches in monorepo are now the source of truth for those edits.
 
 **Validation gates.**
 - `git apply --check` succeeds against the pinned upstream during build (it currently still points at fox fork — that's fine; the patch file is small enough to apply cleanly to either base).
@@ -870,7 +870,7 @@ RUN cd /app/hermes-webui \
 # ── Static overlay env vars ───────────────────────────────────────────────────
 ENV HERMES_WEBUI_EXTENSION_DIR=/app/fox-overlay/webui_static \
     HERMES_WEBUI_EXTENSION_SCRIPT_URLS=/extensions/fox-overlay.js \
-    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/fox-in-the-box.css
+    HERMES_WEBUI_EXTENSION_STYLESHEET_URLS=/extensions/claw-in-the-box.css
 
 RUN chown -R foxinthebox:foxinthebox /app/hermes-agent /app/hermes-webui /app/fox-overlay
 ```
@@ -903,15 +903,15 @@ Update `.github/workflows/build-container.yml` to run `check-overlay-basis.sh` b
 Delete from fork (already gone since Phase 4) — confirm:
 - `forks/hermes-webui/scripts/apply-local-patches.sh`
 - The `_ensure_active_branch()` function in `forks/hermes-webui/server.py`
-- Fox's `local-patches` branch in `fox-in-the-box-ai/hermes-webui` (or repurpose as `fitb-overlay-archive` tag for historical reference).
+- Fox's `local-patches` branch in `smelicit1-debug/hermes-webui` (or repurpose as `citb-overlay-archive` tag for historical reference).
 
 **Validation gates.**
 - `check-overlay-basis.sh` exits 0.
 - All 11 patches in `series` apply with `git apply --check` cleanly.
 - Container builds. **Full smoke checklist sections A–L run end-to-end against the verification container, on both Apple Silicon and an x86_64 host.** Section A4 (architecture verification per #114 lesson) is non-skippable.
-- `docker exec fitb-test cat /app/version.txt` returns the FITB_VERSION (proves no `version.txt` regression).
-- `docker exec fitb-test ls /app/hermes-webui/api/` shows neither `ollama.py` nor `tailscale.py` etc. — they're in `/app/fox-overlay/...`.
-- `docker exec fitb-test pip show hermes-webui` shows the pinned upstream version (e.g. `Version: 0.51.22`).
+- `docker exec citb-test cat /app/version.txt` returns the FITB_VERSION (proves no `version.txt` regression).
+- `docker exec citb-test ls /app/hermes-webui/api/` shows neither `ollama.py` nor `tailscale.py` etc. — they're in `/app/fox-overlay/...`.
+- `docker exec citb-test pip show hermes-webui` shows the pinned upstream version (e.g. `Version: 0.51.22`).
 - 48-hour soak (anti-regression Rule 2) starts at tag time.
 
 **Rollback.** This is the most consequential phase. Rollback procedure:
@@ -921,7 +921,7 @@ Delete from fork (already gone since Phase 4) — confirm:
 3. Rebuild and redeploy `:stable` from the prior `:vX.Y.<n-1>` digest.
 4. File a post-mortem issue documenting which patch failed against which upstream tag.
 
-Critically: the prior Fox-fork branches (`master`/`main`) on `fox-in-the-box-ai/hermes-{webui,agent}` are **not deleted** until Phase 9. Until then, rollback is fully reversible.
+Critically: the prior Fox-fork branches (`master`/`main`) on `claw-in-the-box-ai/hermes-{webui,agent}` are **not deleted** until Phase 9. Until then, rollback is fully reversible.
 
 **Effort estimate.** 1.5 engineering days (1 day implementation, 0.5 day full smoke run on real hardware).
 
@@ -995,7 +995,7 @@ jobs:
           git -C forks/hermes-webui checkout "$WEBUI_TAG"
           packages/fox-overlay/scripts/check-overlay-basis.sh
           docker build -f packages/integration/Dockerfile \
-            -t fitb:upstream-watch \
+            -t citb:upstream-watch \
             --build-arg FITB_VERSION=upstream-watch .
 
       - name: Open issue on failure
@@ -1032,20 +1032,20 @@ jobs:
 
 ### Phase 10 — Cleanup and decommission
 
-**Goal.** Remove all dead code and infrastructure that the migration obviated. The Fox forks of `hermes-webui` and `hermes-agent` are tagged for archival but no longer the source of truth. The `sync-submodules.yml` workflow is repurposed (or deleted) since it pointed at the Fox forks.
+**Goal.** Remove all dead code and infrastructure that the migration obviated. The Fox forks of `hermes-webui` and `hermes-agent` are tagged for archival but no longer the source of truth. The `sync-submodules.yml` workflow is repurposed (or deleted) since it pointed at the Claw forks.
 
 **Prerequisites.** Phase 9 merged. At least 1 successful upstream-watch cycle observed (one nightly run with a real bump signal).
 
 **Concrete file operations.**
 
 In monorepo:
-- Delete `.github/workflows/sync-submodules.yml` (it pointed at the Fox forks; obsolete).
+- Delete `.github/workflows/sync-submodules.yml` (it pointed at the Claw forks; obsolete).
 - Delete any leftover dead code or comments in monorepo referring to the old fork-pinning model.
 - Update `CLAUDE.md` "Repository Structure" section to describe the new layout: forks point at upstream; Fox code lives in `packages/fox-overlay/`.
 - Update `AGENTS.md`, `CONTRIBUTING.md`, `README.md` accordingly (one PR each or one combined doc PR).
 
-In fork repos (`fox-in-the-box-ai/hermes-{webui,agent}`):
-- Tag current `master`/`main` as `fitb-overlay-archive-2026-MM-DD` so the historical Fox-fork content remains discoverable.
+In fork repos (`claw-in-the-box-ai/hermes-{webui,agent}`):
+- Tag current `master`/`main` as `citb-overlay-archive-2026-MM-DD` so the historical Fox-fork content remains discoverable.
 - Update fork README to point to the monorepo (`packages/fox-overlay/`) for active development.
 - Optionally archive the fork repos via GitHub UI (read-only). **Do not delete** — they're referenced by historical commits/tags.
 
@@ -1106,4 +1106,4 @@ The original 827-line plan listed 3 open questions. Refreshed for current state 
 - **`.fox-removals`** — A one-path-per-line manifest in the overlay listing upstream files Fox does NOT want in the shipped image. Applied via `xargs rm -f` after the upstream COPY in the Dockerfile. Cleaner than a patch that deletes 7 files.
 - **Anti-regression rules** — The 5 non-negotiable rules in `project_roadmap_v0_5_to_v0_9.md`: (1) one large change per release, (2) 48-hour soak after every tag, (3) growing regression suite, (4) feature flags everywhere, (5) stabilization pass before every minor bump.
 - **Smoke checklist** — `qa/SMOKE_CHECKLIST.md`. Sections A–L. Must pass against the released `:stable` (or candidate `:latest` for pre-tag), not against a local rebuild. Verification container always on port 8788, never disturbing the user's port-8787 production install.
-- **Verification container** — The convention from `reference_test_container.md`: `fitb-test` on port 8788 with `--cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1` and a named volume. Required for Tailscale section of smoke to actually work.
+- **Verification container** — The convention from `reference_test_container.md`: `citb-test` on port 8788 with `--cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1` and a named volume. Required for Tailscale section of smoke to actually work.

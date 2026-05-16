@@ -1,4 +1,4 @@
-# Fox in the Box — Strategic Overview (1-Page)
+# Claw in the Box — Strategic Overview (1-Page)
 
 ## 🎯 One-Sentence Summary
 **Fox is the developer-first AI agent platform that fixes Hermes bugs (learning loop quality, multi-agent support, memory reliability) while maintaining simplicity. Adoption driven by developers, profitability driven by business users following them.**

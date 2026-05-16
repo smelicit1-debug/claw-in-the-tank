@@ -81,7 +81,7 @@ jobs:
             echo "::error::wait-for-container did not produce a digest output."
             exit 1
           fi
-          IMG="ghcr.io/fox-in-the-box-ai/cloud"
+          IMG="ghcr.io/claw-in-the-box-ai/cloud"
           VERSION="${{ steps.tag.outputs.version }}"
           docker buildx imagetools create -t "$IMG:$VERSION" "$IMG@$DIGEST"
           docker buildx imagetools create -t "$IMG:stable"   "$IMG@$DIGEST"

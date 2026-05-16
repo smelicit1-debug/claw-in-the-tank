@@ -317,7 +317,7 @@ Bug-fix release. When a remote provider closed the connection mid-stream — rat
 
 - **#89** — Gateway errors mid-chat leave messages unanswered with no error shown
 
-[0.4.2]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.4.2
+[0.4.2]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.4.2
 
 ## [0.4.1] - 2026-05-05
 
@@ -346,7 +346,7 @@ The local-AI fallback experience now actually works end-to-end. v0.4.0 shipped t
 
 - **#9** — local CPU fallback model (the original "provider outage handling" issue from the v0.1 backlog)
 
-[0.4.1]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.4.1
+[0.4.1]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.4.1
 
 ## [0.4.0] - 2026-05-05
 
@@ -374,7 +374,7 @@ Also includes the **multi-arch container image** (#82, P0) that landed earlier t
 
 - Phi-4-mini downloads as soon as the user clicks Download in Settings, but **there's no way to use it yet**. v0.4.1 (#9) adds the llama.cpp runtime + Settings → Providers "Local fallback" toggle that makes the model serve chat traffic. Power users who want to pre-stage the model can do so today; everyone else can ignore the new section until v0.4.1 lands.
 
-[0.4.0]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.4.0
+[0.4.0]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.4.0
 
 ## [0.3.1] - 2026-05-05
 
@@ -407,7 +407,7 @@ hermes-webui's request dispatcher routes only `GET` and `POST` at the framework 
 - #67 — Ollama Phase 3: pull / delete model management UI
 - The remaining acceptance criteria from #66 that hadn't shipped in v0.3.0 (zero-terminal flow, 2-minute first-chat for non-technical users with Ollama)
 
-[0.3.1]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.3.1
+[0.3.1]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.3.1
 
 ## [0.3.0] - 2026-05-05
 
@@ -437,7 +437,7 @@ The "Smoother onboarding + first taste of local" release. Clears both of v0.2.0'
 
 - **Live Tailscale hostname mutation requires an authenticated daemon.** If you set the device name before authenticating Tailscale (or with the daemon stopped), the value still persists to `hermes.env` and applies on the next daemon start. The Settings UI surfaces this distinction in its status line.
 
-[0.3.0]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.3.0
+[0.3.0]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.3.0
 
 ## [0.2.0] - 2026-05-04
 
@@ -459,7 +459,7 @@ The "App works out of the box" release. The first-launch flow now closes itself 
 
 - **CI: documented why Windows installs Electron deps with `npm`, not `pnpm`.** `build-electron.yml` uses `npm install` on Windows runners while macOS/Linux use `pnpm install --frozen-lockfile` at the workspace root. The divergence is load-bearing: pnpm's content-addressed store nests deps under `node_modules/.pnpm/<name>@<ver>_<longhash>/...` which exceeds Windows MAX_PATH (260) for makensis.exe's NSIS include resolver. The earlier attempt with `--shamefully-hoist` (4510cc5) still produced unreachable include paths, and `cache: "pnpm"` for setup-node was likewise removed (4550e94) because the cache path doesn't exist when npm is used. Added an inline comment so the next person doesn't try to "fix" it back to pnpm and break Windows installer builds. Closes #42.
 
-[0.2.0]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.2.0
+[0.2.0]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.2.0
 
 ## [0.1.6] - 2026-05-04
 
@@ -476,7 +476,7 @@ This is the actual ship of the signed Windows installer that v0.1.4 and v0.1.5 a
 
 - Windows signing now uses GitHub Environment-bound federated credentials (subject `repo:.../environment:release`) instead of tag-pattern matching. Microsoft's recommended pattern for "many tags" releases — independent of the tag name, so every future release works without per-tag Azure setup. `build-electron.yml` accepts a `signing-environment` workflow_call input; `release.yml` passes `release`. Push-to-main and `workflow_dispatch` builds skip Azure login + signing entirely (no auth attempt, faster CI).
 
-[0.1.6]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.6
+[0.1.6]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.6
 
 ## [0.1.5] - 2026-05-04
 
@@ -490,7 +490,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 
 - `release.yml`'s `wait-for-electron` job now grants `id-token: write`, allowing the called `build-electron.yml` to request the OIDC token needed by `azure/login@v2` and the Trusted Signing action when the workflow runs in `workflow_call` context.
 
-[0.1.5]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.5
+[0.1.5]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.5
 
 ## [0.1.4] - 2026-05-04
 
@@ -498,7 +498,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 
 - Windows installer (`fox-in-the-box-setup-x64.exe`) is now signed with Azure Trusted Signing under the Icemint LLC certificate profile. Microsoft Defender SmartScreen no longer blocks first launch with the "Windows protected your PC" dialog.
 
-[0.1.4]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.4
+[0.1.4]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.4
 
 ## [0.1.3] - 2026-05-04
 
@@ -515,7 +515,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 
 - README accuracy fixes: removed the incorrect "no signed macOS .dmg in releases" line — we ship signed and notarized DMGs (arm64 + x64) since v0.1.0.
 
-[0.1.3]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.3
+[0.1.3]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.3
 
 ## [0.1.2] - 2026-05-04
 
@@ -530,7 +530,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 - `release.yml` sets `fail_on_unmatched_files: true` so a missing artifact glob is a hard failure, not a silent success.
 - `release.yml` runs in a `release-${{ github.ref }}` concurrency group so re-runs of the same tag never race themselves.
 
-[0.1.2]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.2
+[0.1.2]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.2
 
 ## [0.1.1] - 2026-05-04
 
@@ -544,7 +544,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 
 - Manual `workflow_dispatch` trigger on `build-electron.yml` for on-demand smoke testing of Windows and macOS builds (#25)
 
-[0.1.1]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.1
+[0.1.1]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.1
 
 ## [0.1.0] - 2026-05-04
 
@@ -557,7 +557,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 
 - macOS notarization: `APPLE_TEAM_ID` is now passed explicitly to `@electron/notarize` instead of relying on env-var forwarding (#33)
 
-[0.1.0]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.1.0
+[0.1.0]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.1.0
 
 ## [0.0.2] - 2026-05-04
 
@@ -566,7 +566,7 @@ This is the actual ship of the v0.1.4 work. The v0.1.4 tag exists in the repo bu
 - Mobile: titlebar now visible for safe-area spacing; inner content hidden and border removed on narrow viewports
 - Submodule sync: hermes-webui and hermes-agent now auto-synced to latest on every upstream commit
 
-[0.0.2]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.0.2
+[0.0.2]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.0.2
 
 ## [0.0.1] - 2026-05-04
 
@@ -585,4 +585,4 @@ Initial public release.
 - Data directory structure at `~/.foxinthebox` with `config/`, `data/`, and `cache/` separation
 - MIT license
 
-[0.0.1]: https://github.com/fox-in-the-box-ai/fox-in-the-box/releases/tag/v0.0.1
+[0.0.1]: https://github.com/smelicit1-debug/claw-in-the-box/releases/tag/v0.0.1
