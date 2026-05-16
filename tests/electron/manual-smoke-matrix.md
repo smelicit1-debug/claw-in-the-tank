@@ -17,14 +17,14 @@ This matrix validates that desktop users can reach web onboarding in one click.
    - Stop Docker Desktop.
    - Launch app and verify daemon wait/recovery flow, then onboarding opens.
 3. Slow image pull:
-   - Clear local image `ghcr.io/claw-in-the-box-ai/cloud:stable`.
+   - Clear local image `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable`.
    - Throttle network.
    - Verify progress remains visible and no false health timeout during pull.
 4. Slow container boot:
    - Simulate slower startup (low CPU or cold machine).
    - Verify serialized health checks continue until healthy (or actionable timeout shown).
 5. Existing stopped named container:
-   - Leave stopped `claw-in-the-box` container present.
+   - Leave stopped `claw-in-the-tank` container present.
    - Launch app and verify container is reused/started (no name-conflict crash).
 
 ## One-Click Success Assertion

@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# install.sh — Claw in the Box installer (Linux & macOS)
+# install.sh — Claw in the Tank installer (Linux & macOS)
 # Usage: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
 #   or:  bash install.sh
 #
-# Non-interactive (no /dev/tty): set FOX_ACCESS_MODE to 1, 2, or 3 instead of prompting.
-# Tailscale: optional — FOX_TAILSCALE_WAIT_READY_SEC (default 120), FOX_TAILSCALE_URL_POLL_SEC (default 180)
-# Headless Tailscale (no browser): set FOX_TAILSCALE_AUTHKEY to a reusable install auth key from
+# Non-interactive (no /dev/tty): set CLAW_ACCESS_MODE to 1, 2, or 3 instead of prompting.
+# Tailscale: optional — CLAW_TAILSCALE_WAIT_READY_SEC (default 120), CLAW_TAILSCALE_URL_POLL_SEC (default 180)
+# Headless Tailscale (no browser): set CLAW_TAILSCALE_AUTHKEY to a reusable install auth key from
 # https://login.tailscale.com/admin/settings/keys — install.sh runs `tailscale up` with TS_AUTHKEY.
 set -euo pipefail
 
@@ -15,13 +15,13 @@ set -euo pipefail
 BLUE='\033[0;34m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
 RED='\033[0;31m'; NC='\033[0m'
 
-info()    { echo -e "${BLUE}[fox]${NC} $*"; }
-success() { echo -e "${GREEN}[fox]${NC} $*"; }
-warn()    { echo -e "${YELLOW}[fox]${NC} $*"; }
-die()     { echo -e "${RED}[fox] ERROR:${NC} $*" >&2; exit 1; }
+info()    { echo -e "${BLUE}[claw]${NC} $*"; }
+success() { echo -e "${GREEN}[claw]${NC} $*"; }
+warn()    { echo -e "${YELLOW}[claw]${NC} $*"; }
+die()     { echo -e "${RED}[claw] ERROR:${NC} $*" >&2; exit 1; }
 
-IMAGE="ghcr.io/claw-in-the-box-ai/cloud:stable"
-CONTAINER="claw-in-the-box"
+IMAGE="ghcr.io/smelicit1-debug/claw-in-the-tank:stable"
+CONTAINER="claw-in-the-tank"
 
 ##############################################################################
 # 1. Detect OS
@@ -43,15 +43,15 @@ info "Detected platform: $PLATFORM"
 # These two directories must NEVER be the same path or nested inside each other.
 
 if [[ "$PLATFORM" == "linux" ]]; then
-  DEFAULT_DATA_DIR="$HOME/.foxinthebox"
-  DEFAULT_WORKSPACE_DIR="$HOME/Claw in the Box"
+  DEFAULT_DATA_DIR="$HOME/.clawinthetank"
+  DEFAULT_WORKSPACE_DIR="$HOME/Claw in the Tank"
 elif [[ "$PLATFORM" == "macos" ]]; then
-  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Claw in the Box"
-  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Claw in the Box"
+  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Claw in the Tank"
+  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Claw in the Tank"
 fi
 
-DATA_DIR="${FOX_DATA_DIR:-$DEFAULT_DATA_DIR}"
-WORKSPACE_DIR="${FOX_WORKSPACE_DIR:-$DEFAULT_WORKSPACE_DIR}"
+DATA_DIR="${CLAW_DATA_DIR:-$DEFAULT_DATA_DIR}"
+WORKSPACE_DIR="${CLAW_WORKSPACE_DIR:-$DEFAULT_WORKSPACE_DIR}"
 
 ##############################################################################
 # 2. Check / install Docker
@@ -190,7 +190,7 @@ _explain_tailscale() {
   echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
   echo
   echo "  Tailscale is a free VPN tool that lets you securely"
-  echo "  access Claw in the Box from anywhere — your phone,"
+  echo "  access Claw in the Tank from anywhere — your phone,"
   echo "  laptop, or any other device — without opening ports"
   echo "  in your firewall or dealing with IP addresses."
   echo
@@ -201,7 +201,7 @@ _explain_tailscale() {
   echo "    • Free for personal use (up to 100 devices)"
   echo
   echo "  Without Tailscale (port only):"
-  echo "    • Claw in the Box is available at http://localhost:8787"
+  echo "    • Claw in the Tank is available at http://localhost:8787"
   echo "    • Accessible on your local network if your firewall allows it"
   echo "    • No remote access unless you set up your own reverse proxy"
   echo
@@ -214,7 +214,7 @@ _explain_tailscale() {
 _prompt_access_mode() {
   while true; do
     echo
-    echo "How do you want to access Claw in the Box?"
+    echo "How do you want to access Claw in the Tank?"
     echo "  [1] Port only (http://localhost:8787 + LAN if firewall permits)"
     echo "  [2] Tailscale only (private HTTPS from anywhere, free)"
     echo "  [3] Both (port binding + Tailscale)"
@@ -225,13 +225,13 @@ _prompt_access_mode() {
     if [[ -t 0 ]]; then
       read -rp "Enter 1, 2, 3 or ? [default: 1]: " ACCESS_MODE
     elif ! { read -rp "Enter 1, 2, 3 or ? [default: 1]: " ACCESS_MODE < /dev/tty; } 2>/dev/null; then
-      if [[ -n "${FOX_ACCESS_MODE:-}" ]]; then
-        ACCESS_MODE="$FOX_ACCESS_MODE"
-        info "Non-interactive install: FOX_ACCESS_MODE=$ACCESS_MODE"
+      if [[ -n "${CLAW_ACCESS_MODE:-}" ]]; then
+        ACCESS_MODE="$CLAW_ACCESS_MODE"
+        info "Non-interactive install: CLAW_ACCESS_MODE=$ACCESS_MODE"
       else
         ACCESS_MODE="1"
         warn "No usable terminal for prompts — using [1] Port only."
-        warn "For automated installs set FOX_ACCESS_MODE=1|2|3 before running."
+        warn "For automated installs set CLAW_ACCESS_MODE=1|2|3 before running."
       fi
     fi
     ACCESS_MODE="${ACCESS_MODE:-1}"
@@ -282,19 +282,19 @@ _prompt_hostname() {
 
   # Honor pre-set env var (CI / automated installs) — sanitize and use, with
   # a warning + fallback if it ends up empty.
-  if [[ -n "${FOX_HOSTNAME:-}" ]]; then
+  if [[ -n "${CLAW_HOSTNAME:-}" ]]; then
     local sanitized
-    sanitized=$(_sanitize_hostname "$FOX_HOSTNAME")
+    sanitized=$(_sanitize_hostname "$CLAW_HOSTNAME")
     if [[ -z "$sanitized" ]]; then
-      warn "FOX_HOSTNAME='$FOX_HOSTNAME' had no valid characters — using $default_name."
-      FOX_HOSTNAME="$default_name"
+      warn "CLAW_HOSTNAME='$CLAW_HOSTNAME' had no valid characters — using $default_name."
+      CLAW_HOSTNAME="$default_name"
     else
-      if [[ "$sanitized" != "$FOX_HOSTNAME" ]]; then
-        info "FOX_HOSTNAME normalized to: $sanitized"
+      if [[ "$sanitized" != "$CLAW_HOSTNAME" ]]; then
+        info "CLAW_HOSTNAME normalized to: $sanitized"
       fi
-      FOX_HOSTNAME="$sanitized"
+      CLAW_HOSTNAME="$sanitized"
     fi
-    info "Tailscale hostname: $FOX_HOSTNAME"
+    info "Tailscale hostname: $CLAW_HOSTNAME"
     return
   fi
 
@@ -313,17 +313,17 @@ _prompt_hostname() {
   fi
 
   if [[ -z "$entered" ]]; then
-    FOX_HOSTNAME="$default_name"
+    CLAW_HOSTNAME="$default_name"
   else
-    FOX_HOSTNAME=$(_sanitize_hostname "$entered")
-    if [[ -z "$FOX_HOSTNAME" ]]; then
+    CLAW_HOSTNAME=$(_sanitize_hostname "$entered")
+    if [[ -z "$CLAW_HOSTNAME" ]]; then
       warn "Hostname '$entered' had no valid characters — using $default_name."
-      FOX_HOSTNAME="$default_name"
-    elif [[ "$FOX_HOSTNAME" != "$entered" ]]; then
-      info "Hostname normalized to: $FOX_HOSTNAME"
+      CLAW_HOSTNAME="$default_name"
+    elif [[ "$CLAW_HOSTNAME" != "$entered" ]]; then
+      info "Hostname normalized to: $CLAW_HOSTNAME"
     fi
   fi
-  info "Tailscale hostname: $FOX_HOSTNAME"
+  info "Tailscale hostname: $CLAW_HOSTNAME"
 }
 
 if [[ "$USE_TAILSCALE" == "true" ]]; then
@@ -379,7 +379,7 @@ _extract_tailscale_login_url() {
 # on first boot `docker exec … tailscale status` can block or hang until tailscaled is ready, which
 # leaves the installer silent after "Container is running" for a long time or indefinitely.
 _wait_tailscale_cli_ready() {
-  local waited=0 max_wait="${FOX_TAILSCALE_WAIT_READY_SEC:-120}"
+  local waited=0 max_wait="${CLAW_TAILSCALE_WAIT_READY_SEC:-120}"
   info "Waiting for TUN device and tailscale CLI inside the container (up to ${max_wait}s)…"
   while [[ "$waited" -lt "$max_wait" ]]; do
     if $DOCKER_CMD exec "$CONTAINER" sh -c 'test -c /dev/net/tun' >/dev/null 2>&1 \
@@ -407,8 +407,8 @@ _wait_tailscale_cli_ready() {
 FITB_TAILSCALE_URL=""
 FITB_TS_UP_PID=""
 _obtain_tailscale_login_url() {
-  local url="" waited=0 poll_max="${FOX_TAILSCALE_URL_POLL_SEC:-180}"
-  local cap="${TMPDIR:-/tmp}/citb-tailscale-login.$$.$RANDOM.log"
+  local url="" waited=0 poll_max="${CLAW_TAILSCALE_URL_POLL_SEC:-180}"
+  local cap="${TMPDIR:-/tmp}/citt-tailscale-login.$$.$RANDOM.log"
   rm -f "$cap"
   FITB_TAILSCALE_URL=""
   FITB_TS_UP_PID=""
@@ -420,7 +420,7 @@ _obtain_tailscale_login_url() {
   # `tailscale up` stdout/stderr go to this file on the *host* running install.sh — not to
   # /data/logs/tailscaled.log (that file is only what supervisord's tailscaled writes).
   info "Host-side tailscale up log (use: tail -f \"$cap\")"
-  ($DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$FOX_HOSTNAME" --timeout=600 >>"$cap" 2>&1) &
+  ($DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$CLAW_HOSTNAME" --timeout=600 >>"$cap" 2>&1) &
   FITB_TS_UP_PID=$!
 
   while [[ "$waited" -lt "$poll_max" ]]; do
@@ -474,7 +474,7 @@ _tailscale_poll_until_running() {
     _poll_n=$((_poll_n + 1))
     if [[ "$_poll_n" -eq 15 ]]; then
       info "Nudging tailscale up (tunnel may have stayed down after auth)…"
-      $DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$FOX_HOSTNAME" --timeout=120 >/dev/null 2>&1 || true
+      $DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$CLAW_HOSTNAME" --timeout=120 >/dev/null 2>&1 || true
     fi
     sleep 3
   done
@@ -500,13 +500,13 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
   _wait_tailscale_cli_ready || true
 
   # ── Headless: reusable install auth key (no browser, stable for automation) ──
-  if [[ -n "${FOX_TAILSCALE_AUTHKEY:-}" ]]; then
-    _ak_log="${TMPDIR:-/tmp}/citb-tailscale-authkey.$$.$RANDOM.log"
-    info "Tailscale: joining with FOX_TAILSCALE_AUTHKEY (no browser URL)…"
+  if [[ -n "${CLAW_TAILSCALE_AUTHKEY:-}" ]]; then
+    _ak_log="${TMPDIR:-/tmp}/citt-tailscale-authkey.$$.$RANDOM.log"
+    info "Tailscale: joining with CLAW_TAILSCALE_AUTHKEY (no browser URL)…"
     set +e
     # TS_AUTHKEY is read by tailscale up; never echo the key.
-    $DOCKER_CMD exec -e "TS_AUTHKEY=${FOX_TAILSCALE_AUTHKEY}" "$CONTAINER" \
-      tailscale up --hostname="$FOX_HOSTNAME" --timeout=600 >>"$_ak_log" 2>&1
+    $DOCKER_CMD exec -e "TS_AUTHKEY=${CLAW_TAILSCALE_AUTHKEY}" "$CONTAINER" \
+      tailscale up --hostname="$CLAW_HOSTNAME" --timeout=600 >>"$_ak_log" 2>&1
     _ts_ak_rc=$?
     set -e
     if [[ "$_ts_ak_rc" -ne 0 ]]; then
@@ -525,7 +525,7 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
     if [[ "$_ts_url_rc" -ne 0 || -z "$LOGIN_URL" ]]; then
       warn "Tailscale login URL not discovered automatically after polling."
       warn "Daemon stderr: $DOCKER_CMD exec $CONTAINER tail -80 /data/logs/tailscaled.err"
-      warn "Host capture: ls -t ${TMPDIR:-/tmp}/citb-tailscale-login.* 2>/dev/null | head -1"
+      warn "Host capture: ls -t ${TMPDIR:-/tmp}/citt-tailscale-login.* 2>/dev/null | head -1"
     else
       echo
       echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -585,7 +585,7 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
           warn "incompatibility, or SELinux/AppArmor restricting TUN access. Killing background"
           warn "process and continuing — your container is up; you can retry Tailscale later."
           warn "Inspect: $DOCKER_CMD exec $CONTAINER tail -80 /data/logs/tailscaled.err"
-          warn "Retry:   $DOCKER_CMD exec $CONTAINER tailscale up --hostname=\"$FOX_HOSTNAME\""
+          warn "Retry:   $DOCKER_CMD exec $CONTAINER tailscale up --hostname=\"$CLAW_HOSTNAME\""
           kill "$FITB_TS_UP_PID" 2>/dev/null || true
           # Give SIGTERM a moment to land, then escalate.
           sleep 2
@@ -603,7 +603,7 @@ if [[ "$USE_TAILSCALE" == "true" ]]; then
       if [[ "$(_tailscale_backend_state)" != "Running" ]]; then
         info "Retrying tailscale up once to stabilize the tunnel…"
         set +e
-        $DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$FOX_HOSTNAME" --timeout=300 >/dev/null 2>&1
+        $DOCKER_CMD exec "$CONTAINER" tailscale up --hostname="$CLAW_HOSTNAME" --timeout=300 >/dev/null 2>&1
         set -e
       fi
     fi
@@ -620,9 +620,9 @@ fi
 # GitHub instead and write them to a temp directory.
 _download_service_files() {
   local DEST="$1"
-  local RAW_BASE="https://raw.githubusercontent.com/claw-in-the-box-ai/claw-in-the-box/main/packages/scripts"
+  local RAW_BASE="https://raw.githubusercontent.com/claw-in-the-tank-ai/claw-in-the-tank/main/packages/scripts"
   mkdir -p "$DEST"
-  for FILE in foxinthebox.service foxinthebox-updater.service foxinthebox-updater.path com.openclawtank.claw.plist; do
+  for FILE in foxinthebox.service foxinthebox-updater.service foxinthebox-updater.path com.openclawtank.tank.plist; do
     curl -fsSL "$RAW_BASE/$FILE" -o "$DEST/$FILE" 2>/dev/null || true
   done
 }
@@ -662,9 +662,9 @@ elif [[ "$PLATFORM" == "macos" ]]; then
   info "Installing launchd agent…"
   LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
   mkdir -p "$LAUNCH_AGENTS"
-  PLIST="$LAUNCH_AGENTS/com.openclawtank.claw.plist"
+  PLIST="$LAUNCH_AGENTS/com.openclawtank.tank.plist"
 
-  cp "$SCRIPT_DIR/com.openclawtank.claw.plist" "$PLIST"
+  cp "$SCRIPT_DIR/com.openclawtank.tank.plist" "$PLIST"
 
   # Patch data dir into plist
   sed -i '' "s|__DATA_DIR__|$DATA_DIR|g" "$PLIST"
@@ -681,7 +681,7 @@ fi
 ##############################################################################
 echo
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-success "Claw in the Box is installed!"
+success "Claw in the Tank is installed!"
 echo
 echo "  Container  : $CONTAINER"
 echo
@@ -703,7 +703,7 @@ echo "  Stop       : docker stop $CONTAINER"
 if [[ "$PLATFORM" == "linux" ]]; then
   echo "  Service   : systemctl status foxinthebox"
 else
-  echo "  Service   : launchctl list com.openclawtank.claw"
+  echo "  Service   : launchctl list com.openclawtank.tank"
 fi
 echo
 if [[ "$ACCESS_MODE" == "1" || "$ACCESS_MODE" == "3" ]]; then
@@ -714,9 +714,9 @@ echo "━━━━━━━━━━━━━━━━━━━━━━━━�
 
 # Wait for Web UI before opening browser (Hermes/Qdrant first boot can take 1–3+ minutes)
 _wait_web_health_host() {
-  local _hp="${FOX_HEALTH_PORT:-8787}"
+  local _hp="${CLAW_HEALTH_PORT:-8787}"
   local _url="http://127.0.0.1:${_hp}/health"
-  local _max="${FOX_HEALTH_WAIT_SEC:-240}"
+  local _max="${CLAW_HEALTH_WAIT_SEC:-240}"
   local _i
   if ! command -v curl &>/dev/null; then
     warn "curl not found — waiting 25s then opening browser (first start may still be loading)…"
@@ -738,8 +738,8 @@ _wait_web_health_host() {
   return 1
 }
 
-# Open setup Web UI (localhost works for modes 1–3; set FOX_OPEN_BROWSER=0 to skip)
-if [[ "${FOX_OPEN_BROWSER:-1}" != "0" ]] && [[ "$ACCESS_MODE" == "1" || "$ACCESS_MODE" == "2" || "$ACCESS_MODE" == "3" ]]; then
+# Open setup Web UI (localhost works for modes 1–3; set CLAW_OPEN_BROWSER=0 to skip)
+if [[ "${CLAW_OPEN_BROWSER:-1}" != "0" ]] && [[ "$ACCESS_MODE" == "1" || "$ACCESS_MODE" == "2" || "$ACCESS_MODE" == "3" ]]; then
   _url="http://localhost:8787"
   _wait_web_health_host || true
   info "Opening $_url in your default browser…"

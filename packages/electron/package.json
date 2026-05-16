@@ -1,7 +1,7 @@
 {
-  "name": "@claw-in-the-box/electron",
+  "name": "@claw-in-the-tank/electron",
   "version": "0.5.4",
-  "description": "Claw in the Box desktop app",
+  "description": "Claw in the Tank desktop app",
   "author": "Vulpy, Inc.",
   "main": "src/main.js",
   "engines": {

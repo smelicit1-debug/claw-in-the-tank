@@ -1,4 +1,4 @@
-# Claw in the Box — Windows desktop notes
+# Claw in the Tank — Windows desktop notes
 
 ## After uninstall — manual cleanup
 
@@ -8,9 +8,9 @@ the Fox data directory used by the container.
 
 | What | Typical location | Action |
 |------|------------------|--------|
-| Electron user data (logs, updater cache) | `%APPDATA%\@claw-in-the-box\` | Delete folder if you want a clean slate |
+| Electron user data (logs, updater cache) | `%APPDATA%\@claw-in-the-tank\` | Delete folder if you want a clean slate |
 | Docker named volume / bind data | `%USERPROFILE%` path passed to Docker as `/data` host mount | Remove only if you know your install used it |
-| `Claw in the Box` Start menu shortcut | Start menu → right‑click → Unpin / delete | Optional cosmetic cleanup |
+| `Claw in the Tank` Start menu shortcut | Start menu → right‑click → Unpin / delete | Optional cosmetic cleanup |
 
 To also wipe app state that NSIS can remove in one go, the installer can be
 built with `deleteAppDataOnUninstall: true` in `electron-builder.yml` (currently

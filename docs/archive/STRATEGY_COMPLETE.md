@@ -1,4 +1,4 @@
-# 🎯 Claw in the Box — Marketing & Product Strategy (COMPLETE)
+# 🎯 Claw in the Tank — Marketing & Product Strategy (COMPLETE)
 
 **Generated**: May 1, 2026  
 **Based on**: 10,000+ developers surveyed, 64,098 GitHub issues analyzed, 5 peer-reviewed studies  

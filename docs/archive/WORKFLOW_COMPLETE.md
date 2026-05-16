@@ -1,4 +1,4 @@
-# CITB Release & Dev Workflow — Complete Setup
+# CITT Release & Dev Workflow — Complete Setup
 
 **Date:** May 1, 2026  
 **Status:** ✅ COMPLETE  
@@ -185,7 +185,7 @@ pnpm dev:container           # Run with mounts
 
 # Prod build (release)
 pnpm build:docker            # Build tagged image
-docker tag claw-in-the-box:0.1.0 ghcr.io/claw-in-the-box-ai/cloud:0.1.0
+docker tag claw-in-the-tank:0.1.0 ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:0.1.0
 
 # Patch workflow
 git format-patch origin/main -o /patches/
@@ -196,7 +196,7 @@ git format-patch origin/main -o /patches/
 ```bash
 # Provision instances
 aws lightsail create-instances \
-    --instance-name citb-test-linux \
+    --instance-name citt-test-linux \
     --blueprint-id linux-2025-ubuntu \
     --bundle-id small_3_0
 
@@ -204,7 +204,7 @@ aws lightsail create-instances \
 # See: LIGHTSAIL_TEST_CHECKLIST.md
 
 # Cleanup
-aws lightsail delete-instances --instance-names citb-test-linux
+aws lightsail delete-instances --instance-names citt-test-linux
 ```
 
 ### Release Checklist
@@ -229,10 +229,10 @@ mkdir -p /patches
 chmod 777 /patches
 
 ssh-keygen -t ed25519 -f ~/.ssh/vps-patch-sync -N ""
-# Share public key with CITB for rsync
+# Share public key with CITT for rsync
 ```
 
-### On CITB dev machine
+### On CITT dev machine
 ```bash
 # Add VPS SSH key
 cat ~/.ssh/vps-patch-sync >> ~/.ssh/authorized_keys
@@ -278,7 +278,7 @@ crontab -e
 docker run ... \
   -v $(pwd)/forks/hermes-agent:/root/.hermes/hermes-agent \
   -v $(pwd)/forks/hermes-webui:/root/.hermes/hermes-webui \
-  claw-in-the-box:dev
+  claw-in-the-tank:dev
 ```
 
 ### "Changes not showing in container"
@@ -349,4 +349,4 @@ All processes are documented in the files above. For quick ref:
 - **How do I test on instances?** → `LIGHTSAIL_TEST_CHECKLIST.md`
 - **What's the cron job doing?** → `scripts/vps-patch-sync.sh`
 
-**Summary:** You have a complete, automated, testable release pipeline. VPS → CITB → Lightsail → GitHub → Users. 🚀
+**Summary:** You have a complete, automated, testable release pipeline. VPS → CITT → Lightsail → GitHub → Users. 🚀

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 # /workspace/.hermes/scripts/vps-patch-sync.sh
 # Runs every Saturday 09:00 UTC
-# Fetches patches from VPS, cherry-picks to CITB vps-wip branch
+# Fetches patches from VPS, cherry-picks to CITT vps-wip branch
 
 set -euo pipefail
 
-FITB_REPO="/home/ubuntu/workspace/claw-in-the-box"
-VPS_HOST="ubuntu@citb-vps"
+FITB_REPO="/home/ubuntu/workspace/claw-in-the-tank"
+VPS_HOST="ubuntu@citt-vps"
 VPS_PATCHES_DIR="/patches"
 LOCAL_PATCHES_TMP="/tmp/vps-patches-$$"
 LOG_FILE="$HOME/.hermes/logs/vps-patch-sync.log"
@@ -45,7 +45,7 @@ if [ "$PATCH_COUNT" -eq 0 ]; then
     exit 0
 fi
 
-# ── Step 3: Setup CITB repo ──────────────────────────────────────────────────
+# ── Step 3: Setup CITT repo ──────────────────────────────────────────────────
 cd "$FITB_REPO"
 
 log "Fetching origin..."
@@ -105,7 +105,7 @@ rm -rf "$LOCAL_PATCHES_TMP"
 # ── Step 8: Send notification ────────────────────────────────────────────────
 if [ "$CONFLICTS" -gt 0 ]; then
     log "Sending conflict notification..."
-    NOTIFY_MSG="🚨 CITB: Patch sync completed with $CONFLICTS conflicts. Manual review needed."
+    NOTIFY_MSG="🚨 CITT: Patch sync completed with $CONFLICTS conflicts. Manual review needed."
     # Use Hermes send_message if available
     if command -v send_message &> /dev/null; then
         send_message "$NOTIFY_MSG"
@@ -114,7 +114,7 @@ if [ "$CONFLICTS" -gt 0 ]; then
     fi
 else
     log "Sending success notification..."
-    NOTIFY_MSG="✅ CITB: Patch sync complete. vps-wip updated with $APPLIED commits."
+    NOTIFY_MSG="✅ CITT: Patch sync complete. vps-wip updated with $APPLIED commits."
     if command -v send_message &> /dev/null; then
         send_message "$NOTIFY_MSG"
     else

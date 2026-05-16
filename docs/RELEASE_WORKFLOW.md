@@ -1,6 +1,6 @@
 # Release Workflow
 
-How a Claw in the Box release actually happens. Ship-on-demand cadence — typically several releases per day during active development, longer gaps during stabilization.
+How a Claw in the Tank release actually happens. Ship-on-demand cadence — typically several releases per day during active development, longer gaps during stabilization.
 
 ## Anti-regression rules (NON-NEGOTIABLE)
 

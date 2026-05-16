@@ -1,4 +1,4 @@
-# Claw in the Box — Strategy Documentation
+# Claw in the Tank — Strategy Documentation
 
 Complete marketing & product strategy documents based on real developer research (10,000+ developers, 64K+ GitHub issues analyzed, peer-reviewed studies).
 
@@ -142,7 +142,7 @@ Complete marketing & product strategy documents based on real developer research
 ## 📋 Files Reference
 
 ```
-/home/ubuntu/workspace/claw-in-the-box/
+/home/ubuntu/workspace/claw-in-the-tank/
 ├── DEVELOPER_STRATEGY.md          (22K words, developer focus)
 ├── MARKETING_STRATEGY.md          (13K words, full strategy)
 ├── DEVELOPER_REQUIREMENTS.md      (8.5K words, detailed research)

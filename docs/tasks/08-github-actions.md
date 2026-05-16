@@ -13,7 +13,7 @@
 
 ## Summary
 
-Create three GitHub Actions workflow files under `.github/workflows/` that form the complete CI/CD pipeline for Claw in the Box:
+Create three GitHub Actions workflow files under `.github/workflows/` that form the complete CI/CD pipeline for Claw in the Tank:
 
 | Workflow | File | Trigger |
 |---|---|---|
@@ -30,7 +30,7 @@ Create three GitHub Actions workflow files under `.github/workflows/` that form 
 1. **Task 03 complete** — `packages/integration/Dockerfile` exists and `docker build` succeeds.
 2. **Task 06 complete** — `packages/electron/` exists with `pnpm build` producing a `dist/` directory containing `.exe` (Windows) and `.zip` (macOS) artifacts.
 3. `GITHUB_TOKEN` is automatically provided by GitHub Actions — no manual secret setup is required for v0.1.
-4. GHCR (GitHub Container Registry) is enabled for the `claw-in-the-box-ai` org (it is on by default for all GitHub orgs).
+4. GHCR (GitHub Container Registry) is enabled for the `claw-in-the-tank-ai` org (it is on by default for all GitHub orgs).
 
 ---
 
@@ -50,7 +50,7 @@ This workflow:
 - Runs on every push to `main` and every PR targeting `main`.
 - Builds the Docker image from `packages/integration/Dockerfile`.
 - Tags `:latest` on pushes to `main`, `:dev` on pull request builds.
-- Pushes to `ghcr.io/claw-in-the-box-ai/cloud`.
+- Pushes to `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud`.
 - Runs a container smoke test to verify the image is functional.
 
 ```yaml
@@ -100,13 +100,13 @@ jobs:
         run: |
           docker build \
             --platform linux/amd64 \
-            -t ghcr.io/claw-in-the-box-ai/cloud:${{ steps.meta.outputs.tag }} \
+            -t ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:${{ steps.meta.outputs.tag }} \
             -f packages/integration/Dockerfile \
             .
 
       - name: Push Docker image to GHCR
         run: |
-          docker push ghcr.io/claw-in-the-box-ai/cloud:${{ steps.meta.outputs.tag }}
+          docker push ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:${{ steps.meta.outputs.tag }}
 
       - name: Smoke test — start container
         run: |
@@ -114,7 +114,7 @@ jobs:
             --name test-fox \
             --cap-add=NET_ADMIN \
             -p 127.0.0.1:8787:8787 \
-            ghcr.io/claw-in-the-box-ai/cloud:${{ steps.meta.outputs.tag }}
+            ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:${{ steps.meta.outputs.tag }}
 
       - name: Smoke test — wait for container to be healthy
         # Poll instead of blind sleep: first boot clones git repos + pip install,
@@ -288,13 +288,13 @@ jobs:
 
       - name: Re-tag Docker image as versioned and :stable
         run: |
-          docker pull ghcr.io/claw-in-the-box-ai/cloud:latest
-          docker tag  ghcr.io/claw-in-the-box-ai/cloud:latest \
-                      ghcr.io/claw-in-the-box-ai/cloud:${{ steps.tag.outputs.version }}
-          docker tag  ghcr.io/claw-in-the-box-ai/cloud:latest \
-                      ghcr.io/claw-in-the-box-ai/cloud:stable
-          docker push ghcr.io/claw-in-the-box-ai/cloud:${{ steps.tag.outputs.version }}
-          docker push ghcr.io/claw-in-the-box-ai/cloud:stable
+          docker pull ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:latest
+          docker tag  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:latest \
+                      ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:${{ steps.tag.outputs.version }}
+          docker tag  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:latest \
+                      ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
+          docker push ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:${{ steps.tag.outputs.version }}
+          docker push ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
 
       - name: Download Windows artifact
         uses: actions/download-artifact@v4
@@ -337,12 +337,12 @@ All criteria must pass before this task is considered complete.
 
 | # | Criterion | How to verify |
 |---|---|---|
-| 1 | Push to `main` → Docker image `ghcr.io/claw-in-the-box-ai/cloud:latest` appears on GHCR within 10 minutes | Check `ghcr.io/claw-in-the-box-ai/cloud` package page on GitHub |
+| 1 | Push to `main` → Docker image `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:latest` appears on GHCR within 10 minutes | Check `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud` package page on GitHub |
 | 2 | Push to `main` → Windows `.exe` and macOS `.zip` available as downloadable artifacts in the `build-electron` Actions run | Actions → Build Electron → latest run → Artifacts section |
 | 3 | Smoke test in CI: container starts and responds HTTP 200 | `build-container` run log: "✅ /health returned HTTP 200" or "✅ / returned HTTP 200" |
 | 4 | Tag push `v0.1.0` → GitHub Release created with Windows `.exe` and macOS `.zip` attached | Releases page on GitHub shows `v0.1.0` with both installer files |
 | 5 | PR build: only `build-container.yml` runs, `:dev` tag is pushed, Electron build does **not** run | Open a test PR; confirm only the container workflow appears under Checks |
-| 6 | Tag push `v0.1.0` → `ghcr.io/claw-in-the-box-ai/cloud:v0.1.0` and `:stable` tags visible on GHCR | GHCR package tags page shows `v0.1.0`, `latest`, and `stable` |
+| 6 | Tag push `v0.1.0` → `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:v0.1.0` and `:stable` tags visible on GHCR | GHCR package tags page shows `v0.1.0`, `latest`, and `stable` |
 
 ---
 

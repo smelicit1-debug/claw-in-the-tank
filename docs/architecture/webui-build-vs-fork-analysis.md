@@ -91,10 +91,10 @@ The chat-stream protocol is **not** a documented contract. It is a JSON-encoded 
 | `static/fonts/{Manrope,Sora}[wght].woff2` | **Fox** |
 | `static/vendor/smd.min.js` (markdown renderer) | Upstream |
 | `static/icons.js` (90 lines, inline SVG sprite) | Upstream |
-| `static/{claw-in-the-box,setup,fallback-polish,hostname-prompt,onboarding-preview}.{css,js,html}` | **Fox** (additive — already isolated) |
+| `static/{claw-in-the-tank,setup,fallback-polish,hostname-prompt,onboarding-preview}.{css,js,html}` | **Fox** (additive — already isolated) |
 | `static/fox_avatar_cropped.jpg`, `apple-touch-icon.png`, favicon variants | **Fox branding** |
 
-The hermes-webui frontend is **NOT a SPA**. It's an HTML page that loads ~17 vanilla-JS files in order; each registers globals on `window`. Theming is done via CSS custom properties cascading from `:root` overrides defined in `claw-in-the-box.css`. The 7,339 i18n keys are a real surface.
+The hermes-webui frontend is **NOT a SPA**. It's an HTML page that loads ~17 vanilla-JS files in order; each registers globals on `window`. Theming is done via CSS custom properties cascading from `:root` overrides defined in `claw-in-the-tank.css`. The 7,339 i18n keys are a real surface.
 
 ### 1.4 Server-side state
 
@@ -155,7 +155,7 @@ Implication for Path B (full backend replacement):
 |---|---|---|
 | PWA service worker (`sw.js`) | Vanilla JS service worker, opt-in app-shell cache | Upstream + Fox patches |
 | PWA manifest | `manifest.json` | Upstream + Fox |
-| Theme system | CSS custom properties on `:root`, dark/light auto + override | Upstream + Fox tokens in `claw-in-the-box.css` |
+| Theme system | CSS custom properties on `:root`, dark/light auto + override | Upstream + Fox tokens in `claw-in-the-tank.css` |
 | i18n | `static/i18n.js`, `t(key, params)` global, **7,339 keys** | Upstream + Fox keys |
 | Markdown rendering | `vendor/smd.min.js` (Streaming MD) | Upstream |
 | Model picker | `panels.js`, populated from `/api/models` + `/api/models/live` | Upstream + Fox modifications |
@@ -380,7 +380,7 @@ All of Path A's, plus:
 **Recommendation: use Tailwind for Path A.**
 
 **Why for Fox specifically:**
-- Fox today already uses CSS custom properties for theming (`claw-in-the-box.css`). Tailwind plays nicely with this — define design tokens as CSS vars, reference them in `tailwind.config.ts`. Theme switching keeps working.
+- Fox today already uses CSS custom properties for theming (`claw-in-the-tank.css`). Tailwind plays nicely with this — define design tokens as CSS vars, reference them in `tailwind.config.ts`. Theme switching keeps working.
 - Co-located styling reduces drift between markup and styles, which has plagued `style.css` (3,052 lines) + 17 JS files.
 - Tooling — JIT, PurgeCSS — means production CSS bundle is tiny (typically < 30 KB).
 

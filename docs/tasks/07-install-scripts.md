@@ -28,7 +28,7 @@
     28|## Prerequisites
     29|
     30|1. **Task 02 complete** — `packages/scripts/` directory exists in the monorepo.
-    31|2. **Task 03 complete** — `ghcr.io/claw-in-the-box-ai/cloud:stable` has been pushed to
+    31|2. **Task 03 complete** — `ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable` has been pushed to
     32|   GHCR and is publicly pullable (or the token is in `~/.docker/config.json`).
     33|
     34|---
@@ -41,7 +41,7 @@
     41|| `packages/scripts/foxinthebox.service`                    | systemd container-run unit           |
     42|| `packages/scripts/foxinthebox-updater.service`            | systemd one-shot update unit         |
     43|| `packages/scripts/foxinthebox-updater.path`               | systemd path-watch unit              |
-    44|| `packages/scripts/com.openclawtank.claw.plist`                   | launchd agent plist (macOS)          |
+    44|| `packages/scripts/com.openclawtank.tank.plist`                   | launchd agent plist (macOS)          |
     45|| `tests/container/test_install.bats`                       | Bats test suite (6 test cases)       |
     46|
     47|---
@@ -52,7 +52,7 @@
     52|
     53|```bash
     54|#!/usr/bin/env bash
-    55|# install.sh — Claw in the Box installer (Linux & macOS)
+    55|# install.sh — Claw in the Tank installer (Linux & macOS)
     56|# Usage: curl -fsSL https://raw.githubusercontent.com/.../install.sh | bash
     57|#   or:  bash install.sh
     58|set -euo pipefail
@@ -68,8 +68,8 @@
     68|warn()    { echo -e "${YELLOW}[fox]${NC} $*"; }
     69|die()     { echo -e "${RED}[fox] ERROR:${NC} $*" >&2; exit 1; }
     70|
-    71|IMAGE="ghcr.io/claw-in-the-box-ai/cloud:stable"
-    72|CONTAINER="claw-in-the-box"
+    71|IMAGE="ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable"
+    72|CONTAINER="claw-in-the-tank"
     73|
     74|##############################################################################
     75|# 1. Detect OS
@@ -92,10 +92,10 @@
     92|
     93|if [[ "$PLATFORM" == "linux" ]]; then
     94|  DEFAULT_DATA_DIR="$HOME/.foxinthebox"
-    95|  DEFAULT_WORKSPACE_DIR="$HOME/Claw in the Box"
+    95|  DEFAULT_WORKSPACE_DIR="$HOME/Claw in the Tank"
     96|elif [[ "$PLATFORM" == "macos" ]]; then
-    97|  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Claw in the Box"
-    98|  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Claw in the Box"
+    97|  DEFAULT_DATA_DIR="$HOME/Library/Application Support/Claw in the Tank"
+    98|  DEFAULT_WORKSPACE_DIR="$HOME/Documents/Claw in the Tank"
     99|fi
    100|
    101|DATA_DIR="${FOX_DATA_DIR:-$DEFAULT_DATA_DIR}"
@@ -161,7 +161,7 @@
    161|  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
    162|  echo
    163|  echo "  Tailscale is a free VPN tool that lets you securely"
-   164|  echo "  access Claw in the Box from anywhere — your phone,"
+   164|  echo "  access Claw in the Tank from anywhere — your phone,"
    165|  echo "  laptop, or any other device — without opening ports"
    166|  echo "  in your firewall or dealing with IP addresses."
    167|  echo
@@ -172,7 +172,7 @@
    172|  echo "    • Free for personal use (up to 100 devices)"
    173|  echo
    174|  echo "  Without Tailscale (port only):"
-   175|  echo "    • Claw in the Box is available at http://localhost:8787"
+   175|  echo "    • Claw in the Tank is available at http://localhost:8787"
    176|  echo "    • Accessible on your local network if your firewall allows it"
    177|  echo "    • No remote access unless you set up your own reverse proxy"
    178|  echo
@@ -185,7 +185,7 @@
    185|_prompt_access_mode() {
    186|  while true; do
    187|    echo
-   188|    echo "How do you want to access Claw in the Box?"
+   188|    echo "How do you want to access Claw in the Tank?"
    189|    echo "  [1] Port only (http://localhost:8787 + LAN if firewall permits)"
    190|    echo "  [2] Tailscale only (private HTTPS from anywhere, free)"
    191|    echo "  [3] Both (port binding + Tailscale)"
@@ -323,9 +323,9 @@
    322|  info "Installing launchd agent…"
    323|  LAUNCH_AGENTS="$HOME/Library/LaunchAgents"
    324|  mkdir -p "$LAUNCH_AGENTS"
-   325|  PLIST="$LAUNCH_AGENTS/com.openclawtank.claw.plist"
+   325|  PLIST="$LAUNCH_AGENTS/com.openclawtank.tank.plist"
    326|
-   327|  cp "$SCRIPT_DIR/com.openclawtank.claw.plist" "$PLIST"
+   327|  cp "$SCRIPT_DIR/com.openclawtank.tank.plist" "$PLIST"
    328|
    329|  # Patch data dir into plist
    330|  sed -i '' "s|__DATA_DIR__|$DATA_DIR|g" "$PLIST"
@@ -342,7 +342,7 @@
    341|##############################################################################
    342|echo
    343|echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-   344|success "Claw in the Box is installed!"
+   344|success "Claw in the Tank is installed!"
    345|echo
    346|echo "  Container  : $CONTAINER"
    347|echo
@@ -364,7 +364,7 @@
    363|if [[ "$PLATFORM" == "linux" ]]; then
    364|  echo "  Service   : systemctl status foxinthebox"
    365|else
-   366|  echo "  Service   : launchctl list com.openclawtank.claw"
+   366|  echo "  Service   : launchctl list com.openclawtank.tank"
    367|fi
    368|echo
    369|if [[ "$ACCESS_MODE" == "1" || "$ACCESS_MODE" == "3" ]]; then
@@ -380,8 +380,8 @@
    379|
    380|```ini
    381|[Unit]
-   382|Description=Claw in the Box container
-   383|Documentation=https://github.com/smelicit1-debug/claw-in-the-box
+   382|Description=Claw in the Tank container
+   383|Documentation=https://github.com/smelicit1-debug/claw-in-the-tank
    384|After=docker.service network-online.target
    385|Requires=docker.service
    386|
@@ -390,19 +390,19 @@
    389|Restart=on-failure
    390|RestartSec=10s
    391|
-   392|ExecStartPre=-/usr/bin/docker stop claw-in-the-box
-   393|ExecStartPre=-/usr/bin/docker rm   claw-in-the-box
+   392|ExecStartPre=-/usr/bin/docker stop claw-in-the-tank
+   393|ExecStartPre=-/usr/bin/docker rm   claw-in-the-tank
    394|ExecStart=/usr/bin/docker run \
    395|  --rm \
-   396|  --name claw-in-the-box \
+   396|  --name claw-in-the-tank \
    397|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    398|  --sysctl net.ipv4.ip_forward=1 \
    399|  -v __DATA_DIR__:/data \
    400|  -p 0.0.0.0:8787:8787 \
-   401|  ghcr.io/claw-in-the-box-ai/cloud:stable
+   401|  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
    402|
-   403|ExecStop=/usr/bin/docker stop claw-in-the-box
+   403|ExecStop=/usr/bin/docker stop claw-in-the-tank
    404|
    405|[Install]
    406|WantedBy=multi-user.target
@@ -417,14 +417,14 @@
    415|
    416|```ini
    417|[Unit]
-   418|Description=Claw in the Box image updater
+   418|Description=Claw in the Tank image updater
    419|After=docker.service network-online.target
    420|Requires=docker.service
    421|
    422|[Service]
    423|Type=oneshot
    424|ExecStart=/bin/bash -c '\
-   425|  /usr/bin/docker pull ghcr.io/claw-in-the-box-ai/cloud:stable && \
+   425|  /usr/bin/docker pull ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable && \
    426|  /usr/bin/systemctl restart foxinthebox && \
    427|  rm -f /data/update.trigger'
    428|```
@@ -435,7 +435,7 @@
    433|
    434|```ini
    435|[Unit]
-   436|Description=Watch for Claw in the Box update sentinel file
+   436|Description=Watch for Claw in the Tank update sentinel file
    437|
    438|[Path]
    439|PathExists=__DATA_DIR__/update.trigger
@@ -447,7 +447,7 @@
    445|
    446|---
    447|
-   448|### `packages/scripts/com.openclawtank.claw.plist`
+   448|### `packages/scripts/com.openclawtank.tank.plist`
    449|
    450|```xml
    451|<?xml version="1.0" encoding="UTF-8"?>
@@ -458,7 +458,7 @@
    456|
    457|  <!-- ── Main service ────────────────────────────────────────────────── -->
    458|  <key>Label</key>
-   459|  <string>com.openclawtank.claw</string>
+   459|  <string>com.openclawtank.tank</string>
    460|
    461|  <key>ProgramArguments</key>
    462|  <array>
@@ -466,7 +466,7 @@
    464|    <string>run</string>
    465|    <string>--rm</string>
    466|    <string>--name</string>
-   467|    <string>claw-in-the-box</string>
+   467|    <string>claw-in-the-tank</string>
    468|    <string>--cap-add=NET_ADMIN</string>
    469|    <string>--sysctl</string>
    470|    <string>net.ipv4.ip_forward=1</string>
@@ -474,7 +474,7 @@
    472|    <string>__DATA_DIR__:/data</string>
    473|    <string>-p</string>
    474|    <string>0.0.0.0:8787:8787</string>
-   475|    <string>ghcr.io/claw-in-the-box-ai/cloud:stable</string>
+   475|    <string>ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable</string>
    476|  </array>
    477|
    478|  <key>RunAtLoad</key>

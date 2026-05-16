@@ -96,7 +96,7 @@ function createTray(running, options = {}) {
   startFlow = options.startFlow || null;
   openApp = options.openApp || null;
 
-  tray.setToolTip('Claw in the Box');
+  tray.setToolTip('Claw in the Tank');
   buildMenu();
 
   log.info('Tray created');

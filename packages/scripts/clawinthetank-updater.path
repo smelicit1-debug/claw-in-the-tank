@@ -1,0 +1,9 @@
+[Unit]
+Description=Watch for Claw in the Tank update sentinel file
+
+[Path]
+PathExists=__DATA_DIR__/update.trigger
+Unit=clawinthetank-updater.service
+
+[Install]
+WantedBy=multi-user.target

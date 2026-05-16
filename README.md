@@ -1,13 +1,13 @@
-# Claw in the Box
+# Claw in the Tank
 
 [![GitHub Sponsors](https://img.shields.io/github/sponsors/bsgdigital?label=Sponsor&logo=githubsponsors&color=ea4aaa)](https://github.com/sponsors/bsgdigital)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
-[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](https://github.com/smelicit1-debug/claw-in-the-box/releases)
-[![Release](https://img.shields.io/github/v/release/claw-in-the-box-ai/claw-in-the-box)](https://github.com/smelicit1-debug/claw-in-the-box/releases/latest)
+[![Platform](https://img.shields.io/badge/platform-Windows%20%7C%20macOS%20%7C%20Linux-lightgrey)](https://github.com/smelicit1-debug/claw-in-the-tank/releases)
+[![Release](https://img.shields.io/github/v/release/claw-in-the-tank-ai/claw-in-the-tank)](https://github.com/smelicit1-debug/claw-in-the-tank/releases/latest)
 
 > A private AI assistant that runs on your computer. No subscriptions, no cloud lock-in, no data leaving your machine without your say-so.
 
-Claw in the Box bundles a full AI assistant — agent, chat UI, persistent memory, and secure remote access — into one app. Bring an OpenRouter API key, run the installer, and start chatting in minutes.
+Claw in the Tank bundles a full AI assistant — agent, chat UI, persistent memory, and secure remote access — into one app. Bring an OpenRouter API key, run the installer, and start chatting in minutes.
 
 <!-- TODO: add a screenshot or short GIF of the chat UI here -->
 
@@ -26,7 +26,7 @@ Claw in the Box bundles a full AI assistant — agent, chat UI, persistent memor
 
 ## How it works
 
-Claw in the Box runs a small private server on your computer inside something called a **Docker container** — think of it as a sealed box that keeps everything organized and separate from the rest of your system. The desktop app manages this box for you automatically.
+Claw in the Tank runs a small private server on your computer inside something called a **Docker container** — think of it as a sealed box that keeps everything organized and separate from the rest of your system. The desktop app manages this box for you automatically.
 
 When you send a message, the app forwards it to your chosen AI provider (like OpenRouter or Anthropic) over the internet, gets a response, and displays it in the chat. The only thing that leaves your computer is the message itself — your conversation history, files, and memory stay on your machine.
 
@@ -40,7 +40,7 @@ When you send a message, the app forwards it to your chosen AI provider (like Op
 
 ## Features
 
-A practical tour of what's in the box. Most of this is wired up by the bundled [Hermes Agent](https://github.com/NousResearch/hermes-agent) and [Hermes WebUI](https://github.com/NousResearch/hermes-webui); Claw in the Box adds the desktop wrapper, the Docker packaging, the onboarding wizard, Tailscale integration, and the auto-update channel.
+A practical tour of what's in the box. Most of this is wired up by the bundled [Hermes Agent](https://github.com/NousResearch/hermes-agent) and [Hermes WebUI](https://github.com/NousResearch/hermes-webui); Claw in the Tank adds the desktop wrapper, the Docker packaging, the onboarding wizard, Tailscale integration, and the auto-update channel.
 
 ### Chat
 
@@ -91,21 +91,21 @@ A practical tour of what's in the box. Most of this is wired up by the bundled [
 
 ### Windows desktop app — **easiest**
 
-Download **[`claw-in-the-box-setup-x64.exe`](https://github.com/smelicit1-debug/claw-in-the-box/releases/latest)** from the latest release. Run the installer and follow the prompts. Docker Desktop is installed automatically if missing.
+Download **[`claw-in-the-tank-setup-x64.exe`](https://github.com/smelicit1-debug/claw-in-the-tank/releases/latest)** from the latest release. Run the installer and follow the prompts. Docker Desktop is installed automatically if missing.
 
 ### macOS desktop app — **easiest**
 
-Download the matching DMG from the [latest release](https://github.com/smelicit1-debug/claw-in-the-box/releases/latest):
+Download the matching DMG from the [latest release](https://github.com/smelicit1-debug/claw-in-the-tank/releases/latest):
 
-- Apple Silicon (M1/M2/M3/M4): **`claw-in-the-box-arm64-mac.dmg`**
-- Intel Mac: **`claw-in-the-box-x64-mac.dmg`**
+- Apple Silicon (M1/M2/M3/M4): **`claw-in-the-tank-arm64-mac.dmg`**
+- Intel Mac: **`claw-in-the-tank-x64-mac.dmg`**
 
-Open the DMG and drag Claw in the Box to your Applications folder. The DMG is signed and notarized by Apple.
+Open the DMG and drag Claw in the Tank to your Applications folder. The DMG is signed and notarized by Apple.
 
 ### Linux / macOS install script
 
 ```bash
-curl -fsSL https://raw.githubusercontent.com/claw-in-the-box-ai/claw-in-the-box/main/packages/scripts/install.sh | bash
+curl -fsSL https://raw.githubusercontent.com/claw-in-the-tank-ai/claw-in-the-tank/main/packages/scripts/install.sh | bash
 ```
 
 Installs Docker if needed, pulls the container image, asks how you want to access it (port, Tailscale, or both), prompts for a friendly Tailscale hostname, and sets up `systemd` (Linux) or `launchd` (macOS) so the assistant comes back after reboot.
@@ -114,7 +114,7 @@ Installs Docker if needed, pulls the container image, asks how you want to acces
 
 ```bash
 docker run -d \
-  --name claw-in-the-box \
+  --name claw-in-the-tank \
   --restart unless-stopped \
   --add-host=host.docker.internal:host-gateway \
   --cap-add=NET_ADMIN \
@@ -122,7 +122,7 @@ docker run -d \
   --sysctl net.ipv4.ip_forward=1 \
   -p 127.0.0.1:8787:8787 \
   -v ~/.foxinthebox:/data \
-  ghcr.io/claw-in-the-box-ai/cloud:stable
+  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
 ```
 
 Then open **http://localhost:8787** and follow the setup wizard.
@@ -133,10 +133,10 @@ Then open **http://localhost:8787** and follow the setup wizard.
 git submodule update --init --recursive
 pnpm install
 pnpm build:docker          # build the container with the version in /VERSION
-docker run -d --name citb \
+docker run -d --name citt \
   --cap-add=NET_ADMIN --device /dev/net/tun --sysctl net.ipv4.ip_forward=1 \
   -p 127.0.0.1:8787:8787 -v ~/.foxinthebox:/data \
-  claw-in-the-box:$(cat VERSION)
+  claw-in-the-tank:$(cat VERSION)
 ```
 
 For local iteration on the bundled `hermes-agent` / `hermes-webui` submodules, see [`docs/DEV_MODE.md`](docs/DEV_MODE.md). For releases, see [`docs/RELEASE_WORKFLOW.md`](docs/RELEASE_WORKFLOW.md).
@@ -266,19 +266,19 @@ What we're working on next. No promises on dates — this is a small team — bu
 - Llama Guard 3 1B content safety — local on-device classifier, async parallel to streaming, wipes unsafe responses in-place (v0.7.0)
 - Routines — teach Fox multi-step workflows via conversation, runs on a schedule, dry-run preview before activating (v0.8.0)
 
-**Have an idea?** [Open a discussion](https://github.com/smelicit1-debug/claw-in-the-box/discussions) or [file a feature request](https://github.com/smelicit1-debug/claw-in-the-box/issues/new).
+**Have an idea?** [Open a discussion](https://github.com/smelicit1-debug/claw-in-the-tank/discussions) or [file a feature request](https://github.com/smelicit1-debug/claw-in-the-tank/issues/new).
 
 ---
 
 ## Support
 
-Open an [issue](https://github.com/smelicit1-debug/claw-in-the-box/issues/new/choose) or start a [discussion](https://github.com/smelicit1-debug/claw-in-the-box/discussions).
+Open an [issue](https://github.com/smelicit1-debug/claw-in-the-tank/issues/new/choose) or start a [discussion](https://github.com/smelicit1-debug/claw-in-the-tank/discussions).
 
 ---
 
 ## Acknowledgments
 
-Claw in the Box stands on the shoulders of:
+Claw in the Tank stands on the shoulders of:
 
 - **[Hermes Agent](https://github.com/NousResearch/hermes-agent)** by NousResearch — the agent core.
 - **[Hermes WebUI](https://github.com/NousResearch/hermes-webui)** — the browser chat interface.

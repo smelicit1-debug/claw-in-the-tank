@@ -125,7 +125,7 @@ jobs:
           azure-client-id: ${{ secrets.AZURE_CLIENT_ID }}
           endpoint: https://eus.codesigning.azure.net/
           trusted-signing-account-name: Icemint
-          certificate-profile-name: citb-exe-signing
+          certificate-profile-name: citt-exe-signing
           files-folder: packages/electron/dist
           files-folder-filter: exe
           file-digest: SHA256

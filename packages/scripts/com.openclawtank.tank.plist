@@ -6,7 +6,7 @@
 
   <!-- ── Main service ────────────────────────────────────────────────── -->
   <key>Label</key>
-  <string>com.openclawtank.claw</string>
+  <string>com.openclawtank.tank</string>
 
   <key>ProgramArguments</key>
   <array>
@@ -14,7 +14,7 @@
     <string>run</string>
     <string>--rm</string>
     <string>--name</string>
-    <string>claw-in-the-box</string>
+    <string>claw-in-the-tank</string>
     <string>--cap-add=NET_ADMIN</string>
     <string>--device</string>
     <string>/dev/net/tun</string>
@@ -24,7 +24,7 @@
     <string>__DATA_DIR__:/data</string>
     <string>-p</string>
     <string>0.0.0.0:8787:8787</string>
-    <string>ghcr.io/claw-in-the-box-ai/cloud:stable</string>
+    <string>ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable</string>
   </array>
 
   <key>RunAtLoad</key>

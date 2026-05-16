@@ -1,4 +1,4 @@
-# Claw in the Box — Task Orchestration Guide
+# Claw in the Tank — Task Orchestration Guide
 
 **Audience:** Stan (human manager coordinating AI agent execution)
 **Deadline:** v0.1.0 by May 3, 2026 PST
@@ -63,9 +63,9 @@
 
 ### Task 01 — Stan does this himself
 
-- Create GitHub org `claw-in-the-box-ai`
+- Create GitHub org `claw-in-the-tank-ai`
 - Fork `hermes-agent` and `hermes-webui` into the org
-- Create the main `claw-in-the-box` monorepo with `main` branch protection
+- Create the main `claw-in-the-tank` monorepo with `main` branch protection
 - **Time cap: 15 minutes.** Do not overthink it — a bare repo with a README is enough to unblock 02.
 
 ---
@@ -117,7 +117,7 @@ All four can run in parallel:
 docker run --rm -it \
   -v $(pwd)/test-data:/data \
   -p 8787:8787 \
-  ghcr.io/claw-in-the-box-ai/cloud:dev
+  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:dev
 
 # Expected: browser opens to /setup, wizard completes, chat works
 ```
@@ -171,7 +171,7 @@ Pass these files when spawning each agent. More context = fewer wrong assumption
 **Rationale for extras:**
 - Agents 03+: need the monorepo layout to know where to put files
 - Agent E (onboarding wizard): needs `03-dockerfile.md` to understand how the webui server is structured inside the container — specifically what Python server framework is used and how static files are served
-- Agent F (Electron app): needs `03-dockerfile.md` to get the exact container image name (`ghcr.io/claw-in-the-box-ai/cloud:stable`), port (`8787`), volume mount path (`~/.foxinthebox`), and required `--cap-add` flags
+- Agent F (Electron app): needs `03-dockerfile.md` to get the exact container image name (`ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable`), port (`8787`), volume mount path (`~/.foxinthebox`), and required `--cap-add` flags
 
 ---
 

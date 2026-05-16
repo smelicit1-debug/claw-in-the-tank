@@ -72,7 +72,7 @@ Added task documentation for graceful shutdown implementation across both forks:
 - **hermes-agent branch:** `cli-graceful-shutdown` — SIGTERM/SIGINT handlers, session checkpoint, clean asyncio exit
 - **hermes-webui branch:** `cli-graceful-shutdown` — AgentSessionLock with timeout watchdog, force-release mechanism
 
-**CITB submodules:** Updated to track feature branches for integration once upstream merges to `local-patches`.
+**CITT submodules:** Updated to track feature branches for integration once upstream merges to `local-patches`.
 
 **Task doc:** `docs/tasks/10-cli-graceful-shutdown.md` — full scope, phases, acceptance criteria, and testing strategy.
 

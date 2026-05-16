@@ -102,10 +102,10 @@ RUN set -eux; \
     chmod +x /app/llama-cpp/llama-server
 
 # ── non-root user ─────────────────────────────────────────────────────────────
-RUN useradd -r -s /bin/bash -d /app clawinthebox \
+RUN useradd -r -s /bin/bash -d /app clawinthetank \
     && mkdir -p /data \
-    && chown -R clawinthebox:clawinthebox /app /data \
-    && (getent group tailscale >/dev/null && usermod -aG tailscale clawinthebox || true)
+    && chown -R clawinthetank:clawinthetank /app /data \
+    && (getent group tailscale >/dev/null && usermod -aG tailscale clawinthetank || true)
 
 # Marker for Hermes WebUI: bind behavior / container hints (see hermes-webui server.py)
 RUN printf '1\n' > /.within_container
@@ -136,7 +136,7 @@ RUN set -eux; \
         echo "ERROR: hermes-webui has no pyproject.toml, setup.py, or requirements.txt" >&2; \
         exit 1; \
     fi; \
-    chown -R clawinthebox:clawinthebox /app/hermes-agent /app/hermes-webui
+    chown -R clawinthetank:clawinthetank /app/hermes-agent /app/hermes-webui
 
 # ── entrypoint (full version — replaces Task 03 stub) ─────────────────────────
 COPY packages/integration/entrypoint.sh /app/entrypoint.sh

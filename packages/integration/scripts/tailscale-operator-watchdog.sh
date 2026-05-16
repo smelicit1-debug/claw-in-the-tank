@@ -5,7 +5,7 @@
 # follows a tailnet key expiry. Once dropped, the foxinthebox-owned webui
 # can no longer drive `tailscale up` — checkprefs returns "Access denied"
 # and the user's only recovery is `docker exec ... tailscale set --operator`
-# from a host shell. CITB#127.
+# from a host shell. CITT#127.
 #
 # This watchdog runs as root (supervisord's UID) so it has the authority to
 # (re-)set OperatorUser even when tailscaled cleared it. The grant is a

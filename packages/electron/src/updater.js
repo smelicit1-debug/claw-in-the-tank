@@ -1,7 +1,7 @@
 'use strict';
 
 /**
- * updater.js — electron-updater integration for Claw in the Box
+ * updater.js — electron-updater integration for Claw in the Tank
  *
  * Responsibilities:
  *  - Check GitHub Releases for a newer version on startup (after a short delay)
@@ -142,7 +142,7 @@ async function checkForUpdatesManual() {
       _checking = false;
       dialog.showMessageBox({
         type: 'info',
-        title: 'Claw in the Box',
+        title: 'Claw in the Tank',
         message: 'You are running the latest version.',
       });
     }

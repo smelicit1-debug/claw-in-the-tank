@@ -8,11 +8,11 @@
 
 ## What Was Done
 
-1. **GitHub org confirmed** — `claw-in-the-box-ai` already existed (Stan created it).
+1. **GitHub org confirmed** — `claw-in-the-tank-ai` already existed (Stan created it).
 
-2. **Main monorepo created** — `claw-in-the-box-ai/claw-in-the-box` created via API:
+2. **Main monorepo created** — `claw-in-the-tank-ai/claw-in-the-tank` created via API:
    - Public repo, MIT license, default branch `main`
-   - URL: https://github.com/smelicit1-debug/claw-in-the-box
+   - URL: https://github.com/smelicit1-debug/claw-in-the-tank
 
 3. **hermes-agent fork created** — Forked `NousResearch/hermes-agent` into `smelicit1-debug/hermes-agent`:
    - URL: https://github.com/smelicit1-debug/hermes-agent
@@ -34,11 +34,11 @@
 
 | # | Criterion | Result |
 |---|-----------|--------|
-| 1 | `claw-in-the-box-ai` org exists | ✅ PASS |
-| 2 | `claw-in-the-box-ai/claw-in-the-box` exists, default branch `main` | ✅ PASS |
+| 1 | `claw-in-the-tank-ai` org exists | ✅ PASS |
+| 2 | `claw-in-the-tank-ai/claw-in-the-tank` exists, default branch `main` | ✅ PASS |
 | 3 | `smelicit1-debug/hermes-agent` exists as fork of NousResearch/hermes-agent | ✅ PASS |
 | 4 | `smelicit1-debug/hermes-webui` exists as fork of nesquena/hermes-webui | ✅ PASS |
-| 5 | All three repos visible under `claw-in-the-box-ai` org | ✅ PASS |
+| 5 | All three repos visible under `claw-in-the-tank-ai` org | ✅ PASS |
 | 6 | Admin access confirmed (token has admin rights to all three) | ✅ PASS |
 
 ---

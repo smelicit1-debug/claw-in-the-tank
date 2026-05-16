@@ -535,7 +535,7 @@ async function ensureDockerWindows(deps) {
     const msg =
       'Could not install Docker Desktop automatically.\n\n' +
       'Please install it manually from https://docker.com/products/docker-desktop,\n' +
-      'then reopen Claw in the Box.';
+      'then reopen Claw in the Tank.';
     const installErr = new Error(msg);
     installErr.code = 'DOCKER_INSTALL_FAILED';
     throw installErr;

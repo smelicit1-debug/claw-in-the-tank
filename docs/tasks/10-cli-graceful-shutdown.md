@@ -4,7 +4,7 @@
 **Status:** In progress (upstream feature branches)  
 **Epic:** Service stability & reliability  
 **Owner:** Upstream (Hermes Agent + WebUI teams)  
-**CITB Sync:** Tracking `cli-graceful-shutdown` branches in both forks
+**CITT Sync:** Tracking `cli-graceful-shutdown` branches in both forks
 
 ---
 
@@ -100,7 +100,7 @@ OSError(5, 'Input/output error')
 
 ---
 
-## CITB Integration
+## CITT Integration
 
 **Submodules tracking:**
 ```
@@ -109,7 +109,7 @@ forks/hermes-webui       → cli-graceful-shutdown branch
 ```
 
 **Once upstream merges to `local-patches`:**
-- CITB submodule pointers update to include these fixes
+- CITT submodule pointers update to include these fixes
 - User-facing CLI gets graceful restart handling
 - WebUI gets lock timeout protection
 
@@ -156,7 +156,7 @@ systemctl --user restart hermes-gateway
 
 ---
 
-## CITB Todo
+## CITT Todo
 
 - [ ] Monitor upstream branches for merge to `local-patches`
 - [ ] Update submodule pointers when ready

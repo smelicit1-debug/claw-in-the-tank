@@ -12,7 +12,7 @@
     12|
     13|## Summary
     14|
-    15|Write the `Dockerfile` and `supervisord.conf` for the single-container Claw in the Box image, then verify the image builds cleanly and all four supervised services reach `RUNNING` state within 30 seconds of container start.
+    15|Write the `Dockerfile` and `supervisord.conf` for the single-container Claw in the Tank image, then verify the image builds cleanly and all four supervised services reach `RUNNING` state within 30 seconds of container start.
     16|
     17|This is **critical path** — tasks 04 and 05 depend on a working container.
     18|
@@ -299,23 +299,23 @@
    299|# ── AC1: build ─────────────────────────────────────────────────────────────────
    300|docker build \
    301|  --platform linux/amd64 \
-   302|  -t ghcr.io/claw-in-the-box-ai/cloud:dev \
+   302|  -t ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:dev \
    303|  -f packages/integration/Dockerfile .
    304|
    305|# ── start container for remaining checks ──────────────────────────────────────
-   306|docker run -d --name citb-test \
+   306|docker run -d --name citt-test \
    307|  --cap-add=NET_ADMIN \
      --device /dev/net/tun \
    308|  --sysctl net.ipv4.ip_forward=1 \
    309|  -v ~/.foxinthebox:/data \        # Linux default; adjust path for macOS/Windows (see REQUIREMENTS §4.2)
    310|  -p 127.0.0.1:8787:8787 \
    311|  -p 127.0.0.1:6333:6333 \
-   312|  ghcr.io/claw-in-the-box-ai/cloud:dev
+   312|  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:dev
    313|
    314|# ── AC2: all 4 programs RUNNING within 30 s ───────────────────────────────────
    315|for i in $(seq 1 6); do
    316|  sleep 5
-   317|  STATUS=$(docker exec citb-test supervisorctl -c /etc/supervisor/supervisord.conf status 2>/dev/null)
+   317|  STATUS=$(docker exec citt-test supervisorctl -c /etc/supervisor/supervisord.conf status 2>/dev/null)
    318|  echo "$STATUS"
    319|  RUNNING=$(echo "$STATUS" | grep -c "RUNNING" || true)
    320|  [ "$RUNNING" -ge 4 ] && echo "✅ All 4 programs RUNNING" && break
@@ -331,14 +331,14 @@
    330|# expected: {"title":"qdrant - 200"}  (or similar OK response)
    331|
    332|# ── AC5: no ERROR lines in startup logs ───────────────────────────────────────
-   333|docker logs citb-test 2>&1 | grep -i "^ERROR\|^\[ERROR\]" && echo "❌ Errors found" || echo "✅ No startup errors"
+   333|docker logs citt-test 2>&1 | grep -i "^ERROR\|^\[ERROR\]" && echo "❌ Errors found" || echo "✅ No startup errors"
    334|
    335|# ── AC6: /data directory structure ───────────────────────────────────────────
-   336|docker exec citb-test find /data -maxdepth 3 -type d | sort
+   336|docker exec citt-test find /data -maxdepth 3 -type d | sort
    337|# expected to contain: /data/data/mem0  /data/data/tailscale  /data/logs  /data/run
    338|
    339|# ── cleanup ───────────────────────────────────────────────────────────────────
-   340|docker rm -f citb-test
+   340|docker rm -f citt-test
    341|```
    342|
    343|---
@@ -363,7 +363,7 @@
    362|build` (or use `docker buildx`) and verify with:
    363|
    364|```bash
-   365|docker exec citb-test /app/qdrant/qdrant --version
+   365|docker exec citt-test /app/qdrant/qdrant --version
    366|```
    367|
    368|### 3 — `tailscaled` requires `NET_ADMIN`

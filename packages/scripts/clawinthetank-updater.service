@@ -1,0 +1,11 @@
+[Unit]
+Description=Claw in the Tank image updater
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/bin/bash -c '\
+  /usr/bin/docker pull ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable && \
+  /usr/bin/systemctl restart clawinthetank && \
+  rm -f /data/update.trigger'

@@ -1,6 +1,6 @@
 [Unit]
-Description=Claw in the Box container
-Documentation=https://github.com/smelicit1-debug/claw-in-the-box
+Description=Claw in the Tank container
+Documentation=https://github.com/smelicit1-debug/claw-in-the-tank
 After=docker.service network-online.target
 Requires=docker.service
 
@@ -9,19 +9,19 @@ Type=simple
 Restart=on-failure
 RestartSec=10s
 
-ExecStartPre=-/usr/bin/docker stop claw-in-the-box
-ExecStartPre=-/usr/bin/docker rm   claw-in-the-box
+ExecStartPre=-/usr/bin/docker stop claw-in-the-tank
+ExecStartPre=-/usr/bin/docker rm   claw-in-the-tank
 ExecStart=/usr/bin/docker run \
   --rm \
-  --name claw-in-the-box \
+  --name claw-in-the-tank \
   --cap-add=NET_ADMIN \
   --device /dev/net/tun \
   --sysctl net.ipv4.ip_forward=1 \
   -v __DATA_DIR__:/data \
   -p 0.0.0.0:8787:8787 \
-  ghcr.io/claw-in-the-box-ai/cloud:stable
+  ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
 
-ExecStop=/usr/bin/docker stop claw-in-the-box
+ExecStop=/usr/bin/docker stop claw-in-the-tank
 
 [Install]
 WantedBy=multi-user.target

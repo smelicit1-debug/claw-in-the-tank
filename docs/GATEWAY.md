@@ -1,4 +1,4 @@
-# CITB AI Gateway: One-Click LLM Access with Stripe
+# CITT AI Gateway: One-Click LLM Access with Stripe
 
 **Status:** Ready for 1-week implementation (Mon May 12 – Fri May 16)  
 **Owners:** Stan (product), Cursor (dev), Hermes (review)  
@@ -9,7 +9,7 @@
 
 ## Problem
 
-Users need LLM access without managing multiple provider accounts. CITB provides unified access, handles billing, and keeps 5% margin.
+Users need LLM access without managing multiple provider accounts. CITT provides unified access, handles billing, and keeps 5% margin.
 
 ---
 
@@ -19,14 +19,14 @@ Users need LLM access without managing multiple provider accounts. CITB provides
 
 ```
 ┌─────────────────────────────────────────────┐
-│        CITB Web App (MakerKit)              │
+│        CITT Web App (MakerKit)              │
 │  1. Modal on first LLM use                  │
 │  2. User selects provider from .env         │
 │  3. Starts using LLM                        │
 └────────────┬────────────────────────────────┘
              │
 ┌────────────▼────────────────────────────────┐
-│      CITB Backend (Node/MakerKit)           │
+│      CITT Backend (Node/MakerKit)           │
 │  POST /api/inference                        │
 │  ├─ Check user has credits                  │
 │  ├─ Route to ngrok                          │
@@ -117,7 +117,7 @@ Settings page shows:
 ### Backend (.env provisioning)
 
 ```bash
-# Provider keys (CITB manages)
+# Provider keys (CITT manages)
 OPENAI_API_KEY=sk-...
 ANTHROPIC_API_KEY=sk-ant-...
 
@@ -129,7 +129,7 @@ NGROK_AI_GATEWAY_KEY=ng-xxxxx
 STRIPE_SECRET_KEY=sk_live_...
 STRIPE_WEBHOOK_SECRET=whsec_...
 
-# CITB markup
+# CITT markup
 FITB_MARKUP_PERCENT=5
 ```
 
@@ -180,7 +180,7 @@ CREATE TABLE gateway_requests (
 ### Day 1: Database + Stripe Setup
 
 - [ ] Run migrations (users columns + gateway_requests table)
-- [ ] Create Stripe products: `citb-credits-10`, `citb-credits-50`, `citb-credits-100`
+- [ ] Create Stripe products: `citt-credits-10`, `citt-credits-50`, `citt-credits-100`
 - [ ] Set Stripe webhook endpoint → `/webhooks/stripe`
 - [ ] Test Stripe test mode locally
 

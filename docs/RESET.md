@@ -4,7 +4,7 @@ Use this when you want a new container, fresh on-disk data, and optionally a fre
 
 ## Windows
 
-1. **Quit Claw in the Box completely**, including the system-tray icon.
+1. **Quit Claw in the Tank completely**, including the system-tray icon.
 2. **Uninstall the app** from *Settings → Apps → Installed apps* if you also want the program files removed. The installer does not delete your data folder by default.
 3. **Remove the container and data** — pick one:
 
@@ -26,39 +26,39 @@ Use this when you want a new container, fresh on-disk data, and optionally a fre
    **Manual.**
 
    ```powershell
-   docker rm -f claw-in-the-box
-   Remove-Item -Recurse -Force "$env:APPDATA\Claw in the Box"
-   docker rmi ghcr.io/claw-in-the-box-ai/cloud:stable   # optional
+   docker rm -f claw-in-the-tank
+   Remove-Item -Recurse -Force "$env:APPDATA\Claw in the Tank"
+   docker rmi ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable   # optional
    ```
 
-4. **Reinstall** from the [latest release](https://github.com/smelicit1-debug/claw-in-the-box/releases/latest) and start the app once so it recreates the container.
+4. **Reinstall** from the [latest release](https://github.com/smelicit1-debug/claw-in-the-tank/releases/latest) and start the app once so it recreates the container.
 
 ## macOS
 
-1. **Quit Claw in the Box** from the menu-bar icon (or stop the container directly: `docker stop claw-in-the-box`).
+1. **Quit Claw in the Tank** from the menu-bar icon (or stop the container directly: `docker stop claw-in-the-tank`).
 2. **Remove the container.**
 
    ```bash
-   docker rm -f claw-in-the-box
+   docker rm -f claw-in-the-tank
    ```
 
 3. **If you used the install script**, unload the launchd agent so it stops auto-starting:
 
    ```bash
-   launchctl unload ~/Library/LaunchAgents/com.openclawtank.claw.plist
-   rm ~/Library/LaunchAgents/com.openclawtank.claw.plist   # only if you no longer want auto-start
+   launchctl unload ~/Library/LaunchAgents/com.openclawtank.tank.plist
+   rm ~/Library/LaunchAgents/com.openclawtank.tank.plist   # only if you no longer want auto-start
    ```
 
-4. **Remove your data** at the path you chose during install (default: `~/Library/Application Support/Claw in the Box`):
+4. **Remove your data** at the path you chose during install (default: `~/Library/Application Support/Claw in the Tank`):
 
    ```bash
-   rm -rf "$HOME/Library/Application Support/Claw in the Box"
+   rm -rf "$HOME/Library/Application Support/Claw in the Tank"
    ```
 
 5. **Optionally remove the cached image** so the next install pulls fresh:
 
    ```bash
-   docker rmi ghcr.io/claw-in-the-box-ai/cloud:stable
+   docker rmi ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
    ```
 
 6. **Reinstall** by re-running the [install script](../README.md#linux--macos-install-script) or the Docker one-liner.
@@ -67,7 +67,7 @@ Use this when you want a new container, fresh on-disk data, and optionally a fre
 
 1. Stop and remove the container:
    ```bash
-   docker rm -f claw-in-the-box
+   docker rm -f claw-in-the-tank
    ```
 2. If you installed the systemd unit, disable + remove it:
    ```bash
@@ -81,6 +81,6 @@ Use this when you want a new container, fresh on-disk data, and optionally a fre
    ```
 4. Optionally clear the image:
    ```bash
-   docker rmi ghcr.io/claw-in-the-box-ai/cloud:stable
+   docker rmi ghcr.io/smelicit1-debug/claw-in-the-tank/cloud:stable
    ```
 5. Reinstall via `bash packages/scripts/install.sh` or the Docker one-liner.

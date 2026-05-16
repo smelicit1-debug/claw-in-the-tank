@@ -33,7 +33,7 @@ class TestDockerfile(unittest.TestCase):
 
     def test_non_root_user_named_foxinthebox(self) -> None:
         self.assertRegex(self.df, r"useradd\s+.*\sfoxinthebox")
-        self.assertNotIn("claw-in-the-box", self.df)
+        self.assertNotIn("claw-in-the-tank", self.df)
 
     def test_expose_and_entrypoint(self) -> None:
         self.assertIn("EXPOSE 8787 6333", self.df)
@@ -90,9 +90,9 @@ class TestSupervisordConf(unittest.TestCase):
 
     def test_supervisord_socket_not_on_data_volume(self) -> None:
         """AF_UNIX on bind-mounted /data fails on Docker Desktop (macOS/Windows)."""
-        self.assertIn("pidfile=/run/citb/supervisord.pid", self.ini)
-        self.assertIn("file=/run/citb/supervisor.sock", self.ini)
-        self.assertIn("serverurl=unix:///run/citb/supervisor.sock", self.ini)
+        self.assertIn("pidfile=/run/citt/supervisord.pid", self.ini)
+        self.assertIn("file=/run/citt/supervisor.sock", self.ini)
+        self.assertIn("serverurl=unix:///run/citt/supervisor.sock", self.ini)
         self.assertNotIn("file=/data/run/supervisor.sock", self.ini)
 
 
@@ -105,7 +105,7 @@ class TestEntrypoint(unittest.TestCase):
         self.assertIn("/data/apps", self.sh)
         self.assertIn("_link_hermes_app", self.sh)
         self.assertIn("/app/hermes-agent", self.sh)
-        self.assertIn("mkdir -p /run/citb", self.sh)
+        self.assertIn("mkdir -p /run/citt", self.sh)
         self.assertIn("exec /usr/local/bin/supervisord", self.sh)
 
     def test_dev_mode_pip_installs_webui_when_present(self) -> None:

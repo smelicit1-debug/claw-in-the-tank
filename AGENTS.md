@@ -1,4 +1,4 @@
-# Claw in the Box — Development Instructions
+# Claw in the Tank — Development Instructions
 
 This file governs how AI agents work in this repository.
 Read it in full before writing any code.
@@ -14,7 +14,7 @@ You are the **implementer**. You write code, tests, and config files.
 A separate supervisor agent reviews changes before they are committed.
 
 ```
-claw-in-the-box/             ← monorepo root
+claw-in-the-tank/             ← monorepo root
 ├── forks/
 │   ├── hermes-agent/       ← git submodule (smelicit1-debug/hermes-agent)
 │   └── hermes-webui/       ← git submodule (smelicit1-debug/hermes-webui)
@@ -50,10 +50,10 @@ Each task runs in its own **git worktree** to keep work isolated.
 
 ```bash
 # Supervisor creates the worktree for you before handing you the task:
-git worktree add ../citb-task-03 -b task/03-dockerfile
+git worktree add ../citt-task-03 -b task/03-dockerfile
 
 # You work inside that directory:
-cd ../citb-task-03
+cd ../citt-task-03
 
 # When done, you signal completion. Supervisor reviews and commits.
 # Supervisor merges back to main and removes the worktree.
@@ -126,11 +126,11 @@ cd tests/container && bats test_install.bats
 ### Container smoke test
 ```bash
 git submodule update --init --recursive
-docker build -f packages/integration/Dockerfile -t citb:test .
-docker run -d --name citb-test --cap-add=NET_ADMIN --device /dev/net/tun -p 127.0.0.1:8787:8787 citb:test
+docker build -f packages/integration/Dockerfile -t citt:test .
+docker run -d --name citt-test --cap-add=NET_ADMIN --device /dev/net/tun -p 127.0.0.1:8787:8787 citt:test
 sleep 20
 curl -f http://localhost:8787/health
-docker stop citb-test && docker rm citb-test
+docker stop citt-test && docker rm citt-test
 ```
 (First `/health` may take a few tens of seconds on a slow machine; Hermes is already in the image, so clone/pip-on-start is not the bottleneck.)
 

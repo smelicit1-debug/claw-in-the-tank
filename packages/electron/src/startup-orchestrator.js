@@ -161,7 +161,7 @@ async function runStartup({
   });
 
   await runPhase(sessionId, 'container_ready', async () => {
-    containerProgress('Preparing Claw in the Box container…');
+    containerProgress('Preparing Claw in the Tank container…');
     if (typeof docker.ensureDockerAccessModeChosen === 'function') {
       await docker.ensureDockerAccessModeChosen();
     }

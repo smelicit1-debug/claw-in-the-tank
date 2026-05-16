@@ -233,7 +233,7 @@ serves static files from — confirm in Step 1).
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Claw in the Box — Setup</title>
+  <title>Claw in the Tank — Setup</title>
   <link rel="stylesheet" href="/static/setup.css">
 </head>
 <body>
@@ -281,7 +281,7 @@ At the top of the wizard render four step indicators:
 #### Step 1 — Welcome
 
 ```
-🦊 Claw in the Box
+🦊 Claw in the Tank
 
 Let's get you set up.
 

@@ -35,8 +35,8 @@ app.on('window-all-closed', (e) => {
 });
 
 app.whenReady().then(main).catch(handleStartupError);
-app.setAppUserModelId('com.openclawtank.claw.desktop');
-app.setName('Claw in the Box');
+app.setAppUserModelId('com.openclawtank.tank.desktop');
+app.setName('Claw in the Tank');
 
 // ─── Progress window ─────────────────────────────────────────────────────────
 
@@ -71,7 +71,7 @@ function showProgress(message) {
     closable: true,
     alwaysOnTop: true,
     frame: true,
-    title: 'Claw in the Box — Setting up',
+    title: 'Claw in the Tank — Setting up',
     icon: APP_ICON,
     webPreferences: { nodeIntegration: false, contextIsolation: true },
   });
@@ -141,7 +141,7 @@ function showError(details) {
   if (typeof details === 'string') {
     details = {
       message: details,
-      remediation: 'Install Docker Desktop manually and relaunch Claw in the Box.',
+      remediation: 'Install Docker Desktop manually and relaunch Claw in the Tank.',
       diagnosticsText: details,
     };
   }
@@ -164,7 +164,7 @@ function showError(details) {
     closable: true,
     alwaysOnTop: true,
     frame: true,
-    title: 'Claw in the Box — Error',
+    title: 'Claw in the Tank — Error',
     icon: APP_ICON,
     webPreferences: { nodeIntegration: true, contextIsolation: false },
   });
@@ -270,7 +270,7 @@ async function installDockerMac(progressCb = showProgress) {
     cancelId: 1,
     title: 'Docker not found',
     message: 'Docker Desktop is required but was not found.',
-    detail: 'Claw in the Box will install it via Homebrew.\n\nThis may take a few minutes.',
+    detail: 'Claw in the Tank will install it via Homebrew.\n\nThis may take a few minutes.',
   });
 
   if (response !== 0) throw new Error('User cancelled Docker installation');
@@ -279,7 +279,7 @@ async function installDockerMac(progressCb = showProgress) {
     await _runCommandVerbose('brew --version', { timeout: 20_000 });
   } catch (err) {
     const brewErr = new Error(
-      'Homebrew is not installed or not available in PATH.\nInstall Homebrew from https://brew.sh, then relaunch Claw in the Box.'
+      'Homebrew is not installed or not available in PATH.\nInstall Homebrew from https://brew.sh, then relaunch Claw in the Tank.'
     );
     brewErr.code = 'BREW_NOT_FOUND';
     brewErr.cause = err;
@@ -323,7 +323,7 @@ async function showDaemonRecoveryRequired(platform) {
       type: 'warning',
       title: 'Restart required',
       message: 'Docker was installed/started but is not ready yet.',
-      detail: 'A restart is recommended before trying Claw in the Box again.',
+      detail: 'A restart is recommended before trying Claw in the Tank again.',
       buttons: ['Restart now', 'Close'],
       defaultId: 0,
       cancelId: 1,
@@ -340,7 +340,7 @@ async function showDaemonRecoveryRequired(platform) {
       type: 'warning',
       title: 'Docker not ready',
       message: 'Docker Desktop is installed but daemon is not ready yet.',
-      detail: 'Open Docker Desktop and wait until it says it is running. Approve any helper/Gatekeeper prompts in System Settings, then reopen Claw in the Box.',
+      detail: 'Open Docker Desktop and wait until it says it is running. Approve any helper/Gatekeeper prompts in System Settings, then reopen Claw in the Tank.',
       buttons: ['Open Docker Desktop', 'Close'],
       defaultId: 0,
       cancelId: 1,
@@ -357,16 +357,16 @@ async function showDaemonRecoveryRequired(platform) {
 
 function getRemediationForCode(code, platform) {
   if (code === 'DAEMON_LOST_DURING_HEALTH') {
-    return 'Docker daemon stopped while services were starting. Restart Docker Desktop and relaunch Claw in the Box.';
+    return 'Docker daemon stopped while services were starting. Restart Docker Desktop and relaunch Claw in the Tank.';
   }
   if (code === 'CONTAINER_MISSING_DURING_HEALTH' || code === 'CONTAINER_NOT_RUNNING_DURING_HEALTH') {
     return 'Container stopped unexpectedly during startup. Check Docker Desktop container logs and retry.';
   }
   if (code === 'BREW_NOT_FOUND') {
-    return 'Install Homebrew from https://brew.sh, then relaunch Claw in the Box.';
+    return 'Install Homebrew from https://brew.sh, then relaunch Claw in the Tank.';
   }
   if (code === 'BREW_INSTALL_FAILED') {
-    return 'Run brew doctor and brew install --cask docker manually, then relaunch Claw in the Box.';
+    return 'Run brew doctor and brew install --cask docker manually, then relaunch Claw in the Tank.';
   }
   if (code === 'MAC_DOCKER_LAUNCH_FAILED') {
     return 'Open Docker Desktop manually from Applications and approve security/helper prompts.';
@@ -375,23 +375,23 @@ function getRemediationForCode(code, platform) {
     return 'Open an elevated PowerShell and run: wsl --install --no-distribution && wsl --update, reboot, then launch Docker Desktop and retry.';
   }
   if (code === 'DOCKER_DESKTOP_NOT_RUNNING') {
-    return 'Open Docker Desktop manually and wait until it shows Docker Engine running, then relaunch Claw in the Box.';
+    return 'Open Docker Desktop manually and wait until it shows Docker Engine running, then relaunch Claw in the Tank.';
   }
   if (code === 'DOCKER_DESKTOP_LAUNCH_FAILED') {
     return 'Docker Desktop launch failed. Start Docker Desktop manually (as Administrator if needed), then retry.';
   }
   if (code === 'DAEMON_NOT_READY') {
-    if (platform === 'win32') return 'Start Docker Desktop manually, wait until it reports running, then relaunch Claw in the Box.';
-    return 'Open Docker Desktop and wait for daemon readiness, then relaunch Claw in the Box.';
+    if (platform === 'win32') return 'Start Docker Desktop manually, wait until it reports running, then relaunch Claw in the Tank.';
+    return 'Open Docker Desktop and wait for daemon readiness, then relaunch Claw in the Tank.';
   }
   if (code === 'IMAGE_PULL_TIMEOUT') return 'Check network connectivity and retry. Corporate proxies/firewalls can block container pulls.';
   if (code === 'HEALTH_TIMEOUT') return 'Container started but app is not healthy yet. Wait a bit longer or restart Docker and try again.';
-  if (code === 'ACCESS_MODE_CANCELLED') return 'Relaunch Claw in the Box and pick a network option, or set FOX_ACCESS_MODE=1|2|3 before starting.';
+  if (code === 'ACCESS_MODE_CANCELLED') return 'Relaunch Claw in the Tank and pick a network option, or set FOX_ACCESS_MODE=1|2|3 before starting.';
   return 'Check diagnostics and logs, then retry.';
 }
 
 async function startFromTray() {
-  showProgress('Starting Claw in the Box…');
+  showProgress('Starting Claw in the Tank…');
   try {
     if (typeof docker.ensureDockerAccessModeChosen === 'function') {
       await docker.ensureDockerAccessModeChosen();
@@ -440,7 +440,7 @@ async function handleStartupError(err) {
 // ─── Main startup sequence ───────────────────────────────────────────────────
 
 async function main() {
-  log.info('Claw in the Box starting up');
+  log.info('Claw in the Tank starting up');
 
   try {
     const startupOutcome = await runStartup({
